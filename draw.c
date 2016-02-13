@@ -50,7 +50,18 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 
   // Octant 8: 0 > m > -1
   else if (A > B) {
-    //int d = 
+    int d = -2*A + B;
+    A *= 2;
+    B *= 2;
+    while (x <= x1) {
+      plot(s, c, x, y);
+      if (d > 0) {
+	y--;
+	d -= B;
+      }
+      x++;
+      d += A;
+    }
   }
 
   // Octant 7: -1 > m
