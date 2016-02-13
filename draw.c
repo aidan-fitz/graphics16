@@ -32,7 +32,7 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
     }
   }
   
-  // Octant 1: m > 0
+  // Octant 1: 1 > m > 0
   else if (y1 > y0) {
     int d = 2*A + B;
     A *= 2;
@@ -48,24 +48,24 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
     }
   }
 
-  // Octant 8: m > -1
+  // Octant 8: 0 > m > -1
   else if (A > B) {
     //int d = 
   }
 
-  // Octant 7: meh
+  // Octant 7: -1 > m
   else {
-    int d = A + 2*B;
+    int d = A - 2*B;
     A *= 2;
     B *= 2;
-    while (y <= y1) {
+    while (y >= y1) {
       plot(s, c, x, y);
       if (d > 0) {
 	x++;
 	d += A;
       }
       y--;
-      d += B;
+      d -= B;
     }
 
   }
