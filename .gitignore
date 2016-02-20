@@ -1,6 +1,6 @@
 *~
 main
-lines.png
+*.png
 
 # Object files
 *.o
