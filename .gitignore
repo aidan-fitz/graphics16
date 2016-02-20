@@ -1,6 +1,7 @@
 *~
 main
 *.png
+*.ppm
 
 # Object files
 *.o
