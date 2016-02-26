@@ -5,14 +5,14 @@ CC= gcc
 all: $(OBJECTS)
 	$(CC) -o main $(OBJECTS) -lm
 
-main.o: main.c display.h draw.h ml6.h
+main.o: main.c lib/display.h lib/draw.h lib/ml6.h
 	$(CC) -c main.c
 
-draw.o: draw.c draw.h display.h ml6.h
-	$(CC) $(CFLAGS) -c draw.c
+draw.o: lib/draw.c lib/draw.h lib/display.h lib/ml6.h
+	$(CC) $(CFLAGS) -c lib/draw.c -o draw.o
 
-dsiplay.o: display.c display.h ml6.h
-	$(CC) $(CFLAGS) -c display.c
+display.o: lib/display.c lib/display.h lib/ml6.h
+	$(CC) $(CFLAGS) -c lib/display.c -o display.o
 
 clean:
 	rm *.o *~

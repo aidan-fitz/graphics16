@@ -4,9 +4,9 @@
 
 #include <math.h>
 
-#include "ml6.h"
-#include "display.h"
-#include "draw.h"
+#include "lib/ml6.h"
+#include "lib/display.h"
+#include "lib/draw.h"
 
 int main() {
 
