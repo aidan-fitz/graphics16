@@ -1,4 +1,4 @@
-OBJECTS= main.o draw.o display.o
+OBJECTS= main.o draw.o display.o matrix.o
 CFLAGS= -Wall
 CC= gcc
 
@@ -13,6 +13,9 @@ draw.o: lib/draw.c lib/draw.h lib/display.h lib/ml6.h
 
 display.o: lib/display.c lib/display.h lib/ml6.h
 	$(CC) $(CFLAGS) -c lib/display.c -o display.o
+
+matrix.o: lib/matrix.c lib/matrix.h
+	$(CC) $(CFLAGS) -c lib/matrix.c -o matrix.o
 
 clean:
 	rm *.o *~
