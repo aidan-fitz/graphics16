@@ -2,11 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ml6.h"
-#include "display.h"
-#include "draw.h"
-#include "matrix.h"
-#include "parser.h"
+#include "lib/ml6.h"
+#include "lib/display.h"
+#include "lib/draw.h"
+#include "lib/matrix.h"
 
 int main() {
 
