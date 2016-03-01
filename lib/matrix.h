@@ -6,7 +6,7 @@
 struct matrix {
   double **m;
   int rows, cols;
-  int lastcol;
+  int usedcols;
 } matrix;
 
 //Basic matrix manipulation routines
@@ -31,5 +31,9 @@ struct matrix *make_rotZ(double theta);
 #define make_rotX_degree(theta) make_rotX(theta * DEGREE)
 #define make_rotY_degree(theta) make_rotY(theta * DEGREE)
 #define make_rotY_degree(theta) make_rotZ(theta * DEGREE)
+
+// Resizable matrix routines
+void append_matrix(struct matrix *master, struct matrix *newcols);
+void append_vector(struct matrix *master, double *vector);
 
 #endif

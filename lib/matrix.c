@@ -19,7 +19,7 @@ struct matrix *new_matrix(int rows, int cols) {
   struct matrix *m;
 
   tmp = (double **)malloc(rows * sizeof(double *));
-  for (i=0;i<rows;i++) {
+  for (i = 0; i < rows; i++) {
     tmp[i]=(double *)malloc(cols * sizeof(double));
   }
 
@@ -27,7 +27,7 @@ struct matrix *new_matrix(int rows, int cols) {
   m->m=tmp;
   m->rows = rows;
   m->cols = cols;
-  m->lastcol = 0;
+  m->usedcols = 0;
 
   return m;
 }
@@ -44,7 +44,7 @@ Returns:
 void free_matrix(struct matrix *m) {
 
   int i;
-  for (i=0;i<m->rows;i++) {
+  for (i = 0; i < m->rows; i++) {
     free(m->m[i]);
   }
   free(m->m);
@@ -60,8 +60,7 @@ Returns:
 Reallocates the memory for m->m such that it now has
 newcols number of collumns
 ====================*/
-void grow_matrix(struct matrix *m, int newcols) {
-  
+void grow_matrix(struct matrix *m, int newcols) {  
   int i;
   for (i = 0; i < m->rows; i++) {
     m->m[i] = realloc(m->m[i], newcols * sizeof(double));
@@ -79,7 +78,7 @@ print the matrix
 void print_matrix(struct matrix *m) {
   int row, col;
   for (row = 0; row < m->rows; row++) {
-    for (col = 0; col <= m->lastcol; col++) {
+    for (col = 0; col < m->usedcols; col++) {
       printf("%f ", m->m[row][col]);
     }
     putchar('\n');
@@ -94,12 +93,12 @@ turns m into an identity matrix
 */
 void ident(struct matrix *m) {
   grow_matrix(m, m->rows);
-  m->lastcol = m->rows - 1;
+  m->usedcols = m->rows;
 
   int i;
   for (i = 0; i < m->rows; i++) {
     // Set all the cells to 0.0
-    memset(m->m[i], 0, m->cols * sizeof(double));
+    memset(m->m[i], 0, m->usedcols * sizeof(double));
 
     // Set the diagonal to 1.0
     m->m[i][i] = 1.0;    
@@ -117,7 +116,7 @@ multiply each element of m by x
 void scalar_mult(double x, struct matrix *m) {
   int row, col;
   for (row = 0; row < m->rows; row++) {
-    for (col = 0; col <= m->lastcol; col++) {
+    for (col = 0; col < m->usedcols; col++) {
       m->m[row][col] *= x;
     }
   }
@@ -142,9 +141,9 @@ void matrix_mult(struct matrix *a, struct matrix *b) {
 
     int m, n, p;
     for (m = 0; m < a->rows; m++) {
-      for (n = 0; n < b->cols; n++) {
+      for (n = 0; n < b->usedcols; n++) {
 	product->m[m][n] = 0.0;
-	for (p = 0; p < a->cols; p++) {
+	for (p = 0; p < a->usedcols; p++) {
 	  product->m[m][n] += a->m[m][p] * b->m[p][n];
 	}
       }
@@ -171,13 +170,13 @@ copy matrix a to matrix b
 */
 void copy_matrix(struct matrix *a, struct matrix *b) {
 
-  grow_matrix(b, a->lastcol + 1);
-  b->lastcol = a->lastcol;
+  grow_matrix(b, a->usedcols);
+  b->usedcols = a->usedcols;
   
   int r, c;
 
   for (r=0; r < a->rows; r++) {
-    for (c=0; c <= a->lastcol; c++) { 
+    for (c=0; c < a->usedcols; c++) { 
       b->m[r][c] = a->m[r][c];
     }
   }
@@ -226,7 +225,7 @@ struct matrix *make_rotX(double theta) {
   struct matrix *m = new_matrix(4, 4);
   int i;
   for (i = 0; i < m->rows; i++) {
-    memset(m->m[i], 0, m->cols * sizeof(double));
+    memset(m->m[i], 0, m->usedcols * sizeof(double));
   }
 
   double s = sin(theta), c = cos(theta);
@@ -247,7 +246,7 @@ struct matrix *make_rotY(double theta) {
   struct matrix *m = new_matrix(4, 4);
   int i;
   for (i = 0; i < m->rows; i++) {
-    memset(m->m[i], 0, m->cols * sizeof(double));
+    memset(m->m[i], 0, m->usedcols * sizeof(double));
   }
 
   double s = sin(theta), c = cos(theta);
@@ -268,7 +267,7 @@ struct matrix *make_rotZ(double theta) {
   struct matrix *m = new_matrix(4, 4);
   int i;
   for (i = 0; i < m->rows; i++) {
-    memset(m->m[i], 0, m->cols * sizeof(double));
+    memset(m->m[i], 0, m->usedcols * sizeof(double));
   }
 
   double s = sin(theta), c = cos(theta);
@@ -277,4 +276,45 @@ struct matrix *make_rotZ(double theta) {
   m->m[1][0] = s;  m->m[1][1] = c;
 
   return m;
+}
+
+void append_matrix(struct matrix *master, struct matrix *newcols) {
+  if (master->rows == newcols->rows) {
+    // If space runs out, double the # of available columns
+    if (master->usedcols + newcols->usedcols > master->cols) {
+      grow_matrix(master, master->cols * 2);
+    }
+
+    // Copy rows of new matrix
+    // This routine uses master->usedcols so don't update it yet~!
+    int row, col;
+    for (row = 0; row < newcols->rows; row++) {
+      for (col = 0; col < newcols->cols; col++) {
+	master->m[row][master->usedcols + col] = newcols->m[row][col];
+      }
+    }
+
+    // then update usedcols
+    master->usedcols += newcols->usedcols;
+  }
+}
+
+void append_vector(struct matrix *master, double *vector) {
+  // can't check size of double array
+
+  // If space runs out, double the # of available columns
+  if (master->usedcols + 1 > master->cols) {
+    grow_matrix(master, master->cols * 2);
+  }
+
+  // Copy rows of new matrix
+  // This routine uses master->usedcols so don't update it yet~!
+  int row;
+  for (row = 0; row < master->rows; row++) {
+      master->m[row][master->usedcols] = vector[row];
+  }
+
+  // then update usedcols
+  master->usedcols++;
+
 }
