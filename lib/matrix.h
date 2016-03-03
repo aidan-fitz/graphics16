@@ -4,7 +4,7 @@
 #define MATRIX_H
 
 struct matrix {
-  double **m;
+  double **restrict m;
   int rows, cols;
   int usedcols;
 } matrix;
@@ -19,6 +19,8 @@ void ident(struct matrix *m);
 
 void scalar_mult(double x, struct matrix *m);
 void matrix_mult(struct matrix *a, struct matrix *b);
+
+void vector_mult(struct matrix *a, double *vector);
 
 struct matrix *make_translate(double x, double y, double z);
 struct matrix *make_scale(double x, double y, double z);
