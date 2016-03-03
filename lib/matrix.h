@@ -1,5 +1,7 @@
 #include <math.h> // for M_PI
 
+#include <string.h> // for memcpy, oddly enough (why not stdlib?)
+
 #ifndef MATRIX_H
 #define MATRIX_H
 
@@ -20,7 +22,7 @@ void ident(struct matrix *m);
 void scalar_mult(double x, struct matrix *m);
 void matrix_mult(struct matrix *a, struct matrix *b);
 
-void vector_mult(struct matrix *a, double *vector);
+void vector_mult(struct matrix *a, double *vector, double *result);
 
 struct matrix *make_translate(double x, double y, double z);
 struct matrix *make_scale(double x, double y, double z);
@@ -37,5 +39,7 @@ struct matrix *make_rotZ(double theta);
 // Resizable matrix routines
 void append_matrix(struct matrix *master, struct matrix *newcols);
 void append_vector(struct matrix *master, double *vector);
+
+#define copy_vector(dest, src) memcpy(dest, src, 4 * sizeof(double));
 
 #endif

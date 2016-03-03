@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <string.h> // for memcpy, oddly enough (why not stdlib?)
 
 #include "matrix.h"
 
@@ -160,10 +159,8 @@ void matrix_mult(struct matrix *a, struct matrix *b) {
   }
 }
 
-void vector_mult(struct matrix *a, double *vector) {
+void vector_mult(struct matrix *a, double *vector, double *result) {
   // Can't check size of vector, but that's fine
-
-  double *result = calloc(a->rows, sizeof(double));
 
   int i, j;
   for (i = 0; i < a->rows; i++) {
@@ -172,9 +169,6 @@ void vector_mult(struct matrix *a, double *vector) {
     }
   }
 
-  memcpy(vector, result, a->rows * sizeof(double));
-
-  free(result);
 }
 
 

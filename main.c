@@ -18,27 +18,57 @@ int main() {
 
   // Put crap here
 
-  double restrict vector[4] = {0, 0, 0, 1};
-  double *restrict x = vector;
-  double *restrict y = vector + 1;
+  double restrict vertex[5][4];
+
+  int i;
+  for (i = 0; i < 5; i++) {
+    memset(vertex[i], 0, 4 * sizeof(double));
+  }
 
   // Draw a pentagram
   
-  // First point of pentagram
-  *x = 0;
-  *y = -200;
+  // First vertex of pentagram
+  vertex[0] = {0, -200, 0, 1};
 
-  // First transformation is a 144-degree rotation (one for each point in the pentagram)
+  // Make each of the four remaining vertices by rotating each previous one by 144 degrees
+
   transform = make_rotZ_degree(144);
 
-  // point 1
-  append_vector(edges, vector);
+  for (i = 1; i < 5; i++) {
+    vector_mult(transform, vertex[i-1], vertex[i]);
+  }
 
+  free_matrix(transform);
+
+  // Translate each point such that the pentagram is centered
+  // This transformation maps origin to center
   
-  
-  // Next transformation is a translation from the origin to the center of the screen
+  transform = make_translate(XRES / 2, YRES / 2, 0);
+
+  for (i = 0; i < 5; i++) {
+    double result[4];
+    vector_mult(transform, vertex[i], result);
+    copy_vector(vertex[i], result);
+  }
+
+  free_matrix(transform);
+
+  // Append each vertex to the edge matrix twice
+  for (i = 0; i < 5; i++) {
+    append_vector(edges, vertex[i % 5]);
+    append_vector(edges, vertex[(i + 1) % 5]);
+  }
+
+  // Draw!
+  color pen;
+  pen.red = 0;
+  pen.green = 0;
+  pen.blue = 0;
+
+  draw_edges(edges, s, pen);
+
+  save_extension(s, "pentagram.png");
 
   // Clean up
-  free_matrix( transform );
-  free_matrix( edges );
+  free_matrix(edges);
 }  
