@@ -11,14 +11,14 @@ int main() {
   // Setup
   
   screen s;
-  struct matrix *restrict edges;
-  struct matrix *restrict transform;
+  struct matrix *edges;
+  struct matrix *transform;
 
   edges = new_matrix(4, 4);
 
   // Put crap here
 
-  double restrict vertex[5][4];
+  double vertex[5][4];
 
   int i;
   for (i = 0; i < 5; i++) {
@@ -28,7 +28,10 @@ int main() {
   // Draw a pentagram
   
   // First vertex of pentagram
-  vertex[0] = {0, -200, 0, 1};
+  vertex[0][0] = 0;
+  vertex[0][1] = -200;
+  vertex[0][2] = 0;
+  vertex[0][3] = 1;
 
   // Make each of the four remaining vertices by rotating each previous one by 144 degrees
 

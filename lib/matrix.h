@@ -6,7 +6,7 @@
 #define MATRIX_H
 
 struct matrix {
-  double **restrict m;
+  double **m;
   int rows, cols;
   int usedcols;
 } matrix;
@@ -34,7 +34,7 @@ struct matrix *make_rotZ(double theta);
 #define DEGREE M_PI / 180
 #define make_rotX_degree(theta) make_rotX(theta * DEGREE)
 #define make_rotY_degree(theta) make_rotY(theta * DEGREE)
-#define make_rotY_degree(theta) make_rotZ(theta * DEGREE)
+#define make_rotZ_degree(theta) make_rotZ(theta * DEGREE)
 
 // Resizable matrix routines
 void append_matrix(struct matrix *master, struct matrix *newcols);
