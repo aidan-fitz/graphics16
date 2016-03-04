@@ -5,7 +5,7 @@
 #include "display.h"
 #include "draw.h"
 
-//Insert your line algorithm here
+// Bresenham's line algorithm
 void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   // The other half of the octants (3-6)
   if (x0 > x1) {
@@ -82,3 +82,9 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
   }
 }
 
+void draw_edges(struct matrix *edges, screen s, color c) {
+  int i;
+  for (i = 0; i < edges->usedcols; i += 2) {
+    draw_line((int) (edges->m[0][i]), (int) (edges->m[1][i]), (int) (edges->m[0][i + 1]), (int) (edges->m[1][i + 1]), s, c);
+  }
+}

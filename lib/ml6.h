@@ -11,8 +11,8 @@ a pixel as a color triple
 #ifndef ML6_H
 #define ML6_H
 
-#define XRES 1000
-#define YRES 1000
+#define XRES 500
+#define YRES 500
 #define MAX_COLOR 255
 
 /*
