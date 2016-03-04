@@ -2,69 +2,98 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <math.h>
-
 #include "lib/ml6.h"
 #include "lib/display.h"
 #include "lib/draw.h"
+#include "lib/matrix.h"
 
 int main() {
-
+  // Setup
+  
   screen s;
-  color c;
+  struct matrix *edges;
+  struct matrix *transform;
 
   clear_screen(s);
 
-  // init red, go to blue (thru purple)
-  c.red = MAX_COLOR;
-  c.green = 0;
-  c.blue = 0;
-  
-  const double DEGREE = M_PI / 180;
+  edges = new_matrix(4, 4);
 
-  int theta;
+  // Put crap here
 
-  for (theta = 0; theta <= 360;) {
-    int x1 = 0;
-    int y1 = (int) (YRES * cos(theta*DEGREE) / 2);
+  double vertex[5][4];
 
-    int x2 = (int) (XRES * sin(theta*DEGREE) / 2);
-    int y2 = 0;
-
-    draw_line(x1, y1, x2, y2, s, c);
-
-    // printf("%d %d %d %d \n", theta, c.red, c.green, c.blue);
-
-    // Moved increment statement into loop
-    theta++;
-
-    // red to purple
-    if (theta <= 45) {
-      c.blue = theta * 255 / 45;
-    }
-    // to blue
-    if (45 <= theta && theta < 90) {
-      c.red = (90 - theta) * 255 / 45;
-    }
-    // to white
-    if (90 <= theta && theta < 180) {
-      c.green = (theta - 90) * 255 / 90;
-      c.red = c.green;
-    }
-    // to yellow
-    if (180 <= theta && theta < 270) {
-      c.blue = (270 - theta) * 255 / 90;
-    }
-    // back to red
-    if (270 <= theta) {
-      c.green = (360 - theta) * 255 / 90;
-    }
+  int i;
+  for (i = 0; i < 5; i++) {
+    memset(vertex[i], 0, 4 * sizeof(double));
+    // Critical: set last coordinate to 1 so transformations work
+    vertex[i][3] = 1;
   }
 
-  save_extension(s, "envelope.png");
-  display(s);
-
-  // for testing purposes
-  //save_ppm(s, "envelope.ppm");
+  // Draw a pentagram
   
-}
+  // First vertex of pentagram
+  vertex[0][0] = 0;
+  vertex[0][1] = 200;
+  vertex[0][2] = 0;
+  vertex[0][3] = 1;
+
+  for (i = 0; i < 5; i++) {
+    print_vector(vertex[i]);
+  }
+  
+  // Make each of the four remaining vertices by rotating each previous one by 144 degrees
+
+  transform = make_rotZ_degree(144);
+
+  print_matrix(transform);
+
+  for (i = 1; i < 5; i++) {
+    vector_mult(transform, vertex[i-1], vertex[i]);
+  }
+
+  for (i = 0; i < 5; i++) {
+    print_vector(vertex[i]);
+  }
+
+  free_matrix(transform);
+
+  // Translate each point such that the pentagram is centered
+  // This transformation maps origin to center
+  
+  /*  transform = make_translate(XRES / 2, YRES / 2, 0);
+
+  print_matrix(transform);
+
+  for (i = 0; i < 5; i++) {
+    double result[4];
+    vector_mult(transform, vertex[i], result);
+    copy_vector(vertex[i], result);
+
+    print_vector(vertex[i]);
+  }
+
+  free_matrix(transform);
+
+  */
+
+  // Append each vertex to the edge matrix twice
+  for (i = 0; i < 5; i++) {
+    append_vector(edges, vertex[i % 5]);
+    append_vector(edges, vertex[(i + 1) % 5]);
+  }
+
+  //  print_matrix(edges);
+
+  // Draw!
+  color pen;
+  pen.red = 0;
+  pen.green = 0;
+  pen.blue = 0;
+
+  draw_edges(edges, s, pen);
+
+  save_extension(s, "pentagram.png");
+
+  // Clean up
+  free_matrix(edges);
+}  
