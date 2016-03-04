@@ -225,9 +225,10 @@ struct matrix * make_scale(double x, double y, double z) {
   struct matrix *yolo = new_matrix(4, 4);
   ident(yolo);
   yolo->m[0][0] = x;
-  yolo->m[1][0] = y;
-  yolo->m[2][0] = z;
-  return yolo;  
+  yolo->m[1][1] = y;
+  yolo->m[2][2] = z;
+  yolo->m[3][3] = 1;
+  return yolo;
 }
 
 /*======== struct matrix * make_rotX() ==========
@@ -246,8 +247,12 @@ struct matrix *make_rotX(double theta) {
 
   double s = sin(theta), c = cos(theta);
 
+  // Fill in checkerboard with sines and cosines
   m->m[1][1] = c;  m->m[1][2] = -s;
   m->m[2][1] = s;  m->m[2][2] = c;
+
+  // Set bottom right to 1
+  m->m[3][3] = 1;
 
   return m;
 }
@@ -268,8 +273,12 @@ struct matrix *make_rotY(double theta) {
 
   double s = sin(theta), c = cos(theta);
 
+  // Fill in checkerboard with sines and cosines
   m->m[0][0] = c;  m->m[0][2] = -s;
   m->m[2][0] = s;  m->m[2][2] = c;
+
+  // Set bottom right to 1
+  m->m[3][3] = 1;
 
   return m;
 }
@@ -290,8 +299,12 @@ struct matrix *make_rotZ(double theta) {
 
   double s = sin(theta), c = cos(theta);
 
+  // Fill in checkerboard with sines and cosines
   m->m[0][0] = c;  m->m[0][1] = -s;
   m->m[1][0] = s;  m->m[1][1] = c;
+
+  // Set bottom right to 1
+  m->m[3][3] = 1;
 
   return m;
 }

@@ -33,7 +33,7 @@ int main() {
   
   // First vertex of pentagram
   vertex[0][0] = 0;
-  vertex[0][1] = -200;
+  vertex[0][1] = 200;
   vertex[0][2] = 0;
   vertex[0][3] = 1;
 
@@ -60,7 +60,7 @@ int main() {
   // Translate each point such that the pentagram is centered
   // This transformation maps origin to center
   
-  transform = make_translate(XRES / 2, YRES / 2, 0);
+  /*  transform = make_translate(XRES / 2, YRES / 2, 0);
 
   print_matrix(transform);
 
@@ -73,6 +73,8 @@ int main() {
   }
 
   free_matrix(transform);
+
+  */
 
   // Append each vertex to the edge matrix twice
   for (i = 0; i < 5; i++) {
