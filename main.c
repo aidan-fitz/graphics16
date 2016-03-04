@@ -25,6 +25,8 @@ int main() {
   int i;
   for (i = 0; i < 5; i++) {
     memset(vertex[i], 0, 4 * sizeof(double));
+    // Critical: set last coordinate to 1 so transformations work
+    vertex[i][3] = 1;
   }
 
   // Draw a pentagram
@@ -35,12 +37,22 @@ int main() {
   vertex[0][2] = 0;
   vertex[0][3] = 1;
 
+  for (i = 0; i < 5; i++) {
+    print_vector(vertex[i]);
+  }
+  
   // Make each of the four remaining vertices by rotating each previous one by 144 degrees
 
   transform = make_rotZ_degree(144);
 
+  print_matrix(transform);
+
   for (i = 1; i < 5; i++) {
     vector_mult(transform, vertex[i-1], vertex[i]);
+  }
+
+  for (i = 0; i < 5; i++) {
+    print_vector(vertex[i]);
   }
 
   free_matrix(transform);
@@ -50,10 +62,14 @@ int main() {
   
   transform = make_translate(XRES / 2, YRES / 2, 0);
 
+  print_matrix(transform);
+
   for (i = 0; i < 5; i++) {
     double result[4];
     vector_mult(transform, vertex[i], result);
     copy_vector(vertex[i], result);
+
+    print_vector(vertex[i]);
   }
 
   free_matrix(transform);
@@ -64,7 +80,7 @@ int main() {
     append_vector(edges, vertex[(i + 1) % 5]);
   }
 
-  print_matrix(edges);
+  //  print_matrix(edges);
 
   // Draw!
   color pen;

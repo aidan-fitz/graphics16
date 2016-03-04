@@ -79,7 +79,7 @@ void print_matrix(struct matrix *m) {
   int row, col;
   for (row = 0; row < m->rows; row++) {
     for (col = 0; col < m->usedcols; col++) {
-      printf("%f ", m->m[row][col]);
+      printf("%.3f ", m->m[row][col]);
     }
     putchar('\n');
   }
@@ -237,6 +237,7 @@ angle of rotation and X as the axis of rotation.
 ====================*/
 struct matrix *make_rotX(double theta) {
   struct matrix *m = new_matrix(4, 4);
+  m->usedcols = 4;
   int i;
   for (i = 0; i < m->rows; i++) {
     memset(m->m[i], 0, m->usedcols * sizeof(double));
@@ -258,6 +259,7 @@ angle of rotation and Y as the axis of rotation.
 ====================*/
 struct matrix *make_rotY(double theta) {
   struct matrix *m = new_matrix(4, 4);
+  m->usedcols = 4;
   int i;
   for (i = 0; i < m->rows; i++) {
     memset(m->m[i], 0, m->usedcols * sizeof(double));
@@ -279,6 +281,7 @@ angle of rotation and Z as the axis of rotation.
 ====================*/
 struct matrix *make_rotZ(double theta) {
   struct matrix *m = new_matrix(4, 4);
+  m->usedcols = 4;
   int i;
   for (i = 0; i < m->rows; i++) {
     memset(m->m[i], 0, m->usedcols * sizeof(double));
@@ -331,4 +334,15 @@ void append_vector(struct matrix *master, double *vector) {
   // then update usedcols
   master->usedcols++;
 
+}
+
+void print_vector(double *vector) {
+  putchar('(');
+  int i;
+  for (i = 0; i < 4; i++) {
+    printf("%.3f", vector[i]);
+    if (i < 3)
+      printf(", ");
+  }
+  puts(")");
 }

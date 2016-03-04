@@ -40,6 +40,8 @@ struct matrix *make_rotZ(double theta);
 void append_matrix(struct matrix *master, struct matrix *newcols);
 void append_vector(struct matrix *master, double *vector);
 
+void print_vector(double *vector);
+
 #define copy_vector(dest, src) memcpy(dest, src, 4 * sizeof(double));
 
 #endif

@@ -85,6 +85,6 @@ void draw_line(int x0, int y0, int x1, int y1, screen s, color c) {
 void draw_edges(struct matrix *edges, screen s, color c) {
   int i;
   for (i = 0; i < edges->usedcols; i += 2) {
-    draw_line(edges->m[0][i], edges->m[1][i], edges->m[0][i + 1], edges->m[1][i + 1], s, c);
+    draw_line((int) (edges->m[0][i]), (int) (edges->m[1][i]), (int) (edges->m[0][i + 1]), (int) (edges->m[1][i + 1]), s, c);
   }
 }
