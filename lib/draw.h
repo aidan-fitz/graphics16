@@ -1,3 +1,5 @@
+#include "matrix.h"
+
 #ifndef DRAW_H
 #define DRAW_H
 

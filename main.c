@@ -14,6 +14,8 @@ int main() {
   struct matrix *edges;
   struct matrix *transform;
 
+  clear_screen(s);
+
   edges = new_matrix(4, 4);
 
   // Put crap here
@@ -61,6 +63,8 @@ int main() {
     append_vector(edges, vertex[i % 5]);
     append_vector(edges, vertex[(i + 1) % 5]);
   }
+
+  print_matrix(edges);
 
   // Draw!
   color pen;

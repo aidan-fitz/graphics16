@@ -164,6 +164,7 @@ void vector_mult(struct matrix *a, double *vector, double *result) {
 
   int i, j;
   for (i = 0; i < a->rows; i++) {
+    result[i] = 0;
     for (j = 0; j < a->usedcols; j++) {
       result[i] +=  a->m[i][j] * vector[j];
     }
