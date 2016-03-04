@@ -210,6 +210,7 @@ struct matrix *make_translate(double x, double y, double z) {
   yolo->m[0][3] = x;
   yolo->m[1][3] = y;
   yolo->m[2][3] = z;
+  yolo->m[3][3] = 1;
   return yolo;
 }
 
