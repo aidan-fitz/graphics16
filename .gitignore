@@ -8,6 +8,8 @@ main
 *.ko
 *.obj
 *.elf
+# Python object files
+*.pyc
 
 # Precompiled Headers
 *.gch
