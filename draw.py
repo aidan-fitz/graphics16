@@ -6,18 +6,42 @@ def add_circle( points, cx, cy, cz, r, step ):
     # Find the first point
     x0 = cx + r
     y0 = cy
-    for i in xrange(step, 1 + step, step):
+    for t in xrange(step, 1 + step, step):
         # Find the next point
-        x1 = cx + r * cos(step * 2 * pi)
-        y1 = cy + r * sin(step * 2 * pi)
-        # Add this point
+        x1 = cx + r * cos(t * 2 * pi)
+        y1 = cy + r * sin(t * 2 * pi)
+        # Add the edge (x0, y0) => (x1, y1)
         add_edge(points, x0, y0, cz, x1, y1, cz)
         # Advance the point-er
         x0 = x1
         y0 = y1
 
+HERMITE = 0
+BEZIER = 1
+
 def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
-    pass
+    # Find the first point
+    xi = x0
+    yi = y0
+    # Setup transformation matrix
+    T = None
+    if curve_type == HERMITE:
+        T = make_hermite()
+    elif curve_type == BEZIER:
+        T = make_bezier()
+    # Generate curve coefficients
+    coeffx = generate_curve_coeffs(x0, x1, x2, x3, T)
+    coeffy = generate_curve_coeffs(y0, y1, y2, y3, T)
+    # Iterate
+    for t in xrange(step, 1 + step, step):
+        # Find the next point
+        xf = eval_poly(coeffx, t)
+        yf = eval_poly(coeffy, t)
+        # Add the edge (xi, yi) => (xf, yf)
+        add_edge(points, xi, yi, 0, xf, yf, 0)
+        # Advance the point-er
+        xi = xf
+        yi = yf
 
 def draw_lines( matrix, screen, color ):
     if len( matrix ) < 2:
