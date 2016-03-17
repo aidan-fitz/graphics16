@@ -28,6 +28,25 @@ def parse_file( fname, points, transform, screen, color ):
             add_curve(edges, float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), 0.05, HERMITE)
         elif cmd == "bezier":
             add_curve(edges, float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), 0.05, BEZIER)
-        # control operations
+        # matrix control operations
+        elif cmd == "ident":
+            pass
+        elif cmd == "translate":
+            pass
+        elif cmd == "scale":
+            pass
+        elif cmd == "xrotate":
+            pass
+        elif cmd == "yrotate":
+            pass
+        elif cmd == "zrotate":
+            pass
+        elif cmd == "apply":
+            pass
+        # engine control operations
+        elif cmd == "display":
+            pass
+        elif cmd == "save":
+            pass
         elif cmd == "quit":
             return
