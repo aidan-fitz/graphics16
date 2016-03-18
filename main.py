@@ -8,4 +8,4 @@ color = [ 0, 255, 0 ]
 edges = []
 transform = new_matrix()
 
-parse_file( 'script_nocurves', edges, transform, screen, color )
+parse_file( 'nocurves_short', edges, transform, screen, color )

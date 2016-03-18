@@ -27,6 +27,7 @@ def parse_file( fname, points, transform, screen, color ):
     # Do not loop through the list because we need to get multiple elements
     while True:
         cmd = next(itr, "quit").lower()
+        print cmd
         
         # Drawing routines
         if cmd == "line":
