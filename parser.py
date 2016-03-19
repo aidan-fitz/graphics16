@@ -69,12 +69,14 @@ def parse_file( fname, points, transform, screen, color ):
         # engine control operations
         elif cmd == "display":
             if modified:
+                print "Redraw screen"
                 clear_screen(screen)
                 draw_lines(edges, screen, pen)
                 modified = False
             display(screen)
         elif cmd == "save":
             if modified:
+                print "Redraw screen"
                 clear_screen(screen)
                 draw_lines(edges, screen, pen)
                 modified = False
