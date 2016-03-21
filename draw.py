@@ -50,7 +50,7 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         yf = eval_poly(coeffy, t)
         # Add the edge (xi, yi) => (xf, yf)
         add_edge(points, xi, yi, 0, xf, yf, 0)
-        print 'x: ', xi, xf, 'y: ', yi, yf
+        print 't: ', t, '\tx: ', xi, xf, '\ty: ', yi, yf
         # Advance the point-er
         t += step
         xi = xf
