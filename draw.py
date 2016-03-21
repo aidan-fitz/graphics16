@@ -33,8 +33,14 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
     T = None
     if curve_type == HERMITE:
         T = make_hermite()
+        print "(%.0f, %.0f)" % (x0, y0)
+        print "(%.0f, %.0f)" % (x2, y2)
     elif curve_type == BEZIER:
         T = make_bezier()
+        print "(%.0f, %.0f)" % (x0, y0)
+        print "(%.0f, %.0f)" % (x1, y1)
+        print "(%.0f, %.0f)" % (x2, y2)
+        print "(%.0f, %.0f)" % (x3, y3)
     
     # Generate curve coefficients
     coeffx = generate_curve_coeffs(x0, x1, x2, x3, T)
