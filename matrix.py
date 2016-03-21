@@ -29,9 +29,10 @@ def make_hermite():
     return t
 
 def generate_curve_coeffs( p1, p2, p3, p4, t ):
-    coeffs = [p1, p2, p3, p4]
+    # It's a column vector
+    coeffs = [[p1, p2, p3, p4]]
     matrix_mult(t, coeffs)
-    return coeffs
+    return coeffs[0]
 
 def eval_poly(coeffs, t):
     y = 0

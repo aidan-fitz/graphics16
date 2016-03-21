@@ -35,9 +35,11 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         T = make_hermite()
     elif curve_type == BEZIER:
         T = make_bezier()
+    
     # Generate curve coefficients
     coeffx = generate_curve_coeffs(x0, x1, x2, x3, T)
     coeffy = generate_curve_coeffs(y0, y1, y2, y3, T)
+    
     # Iterate
     for t in float_range(step):
         # Find the next point
