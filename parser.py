@@ -28,19 +28,19 @@ def parse_file( fname, points, transform, screen, color ):
     while True:
         cmd = next(itr, "quit").lower()
         print cmd
-        
+
         # Drawing routines
         if cmd == "line":
             add_edge(edges, float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), \
                      float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)))
             modified = True
-        elif cmd == "circle":
-            add_circle(edges, float(next(itr, 0)), float(next(itr, 0)), 0, float(next(itr, 0)), 0.05)
+        elif cmd == "circle" or cmd == "c":
+            add_circle(edges, float(next(itr, 0)), float(next(itr, 0)), 0, float(next(itr, 0)), 0.01)
             modified = True
-        elif cmd == "hermite":
+        elif cmd == "hermite" or cmd == "h":
             add_curve(edges, float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), 0.05, HERMITE)
             modified = True
-        elif cmd == "bezier":
+        elif cmd == "bezier" or cmd == "b":
             add_curve(edges, float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), float(next(itr, 0)), 0.05, BEZIER)
             modified = True
         
