@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from display import *
 from draw import *
 from parser import *
