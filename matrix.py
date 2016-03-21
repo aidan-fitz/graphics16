@@ -2,7 +2,7 @@ import math
 
 def make_bezier():
     t = new_matrix()
-    t[0][0] = -1
+    t[0][0] = 1
     t[1][0] = 3
     t[0][1] = 3
     t[1][1] = -6
@@ -10,8 +10,8 @@ def make_bezier():
     t[0][2] = -3
     t[2][1] = 3
     t[1][2] = 3
-    t[3][1] = 1
-    t[1][3] = 1
+    t[3][0] = 1
+    t[0][3] = 1
     return t
 
 def make_hermite():
