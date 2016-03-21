@@ -2,23 +2,19 @@ from display import *
 from matrix import *
 from math import *
 
-# Hack for floating-point iterations
-# http://stackoverflow.com/a/477513/2276567
-def float_range(step):
-    reciprocal = int(ceil(1 / step)) + 1
-    return [x * step for x in range(reciprocal)]
-
 def add_circle( points, cx, cy, cz, r, step ):
     # Find the first point
     x0 = cx + r
     y0 = cy
-    for t in float_range(step):
+    t = 0
+    while t < 1 + step:
         # Find the next point
         x1 = cx + r * cos(t * 2 * pi)
         y1 = cy + r * sin(t * 2 * pi)
         # Add the edge (x0, y0) => (x1, y1)
         add_edge(points, x0, y0, cz, x1, y1, cz)
         # Advance the point-er
+        t += step
         x0 = x1
         y0 = y1
 
@@ -47,13 +43,16 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
     coeffy = generate_curve_coeffs(y0, y1, y2, y3, T)
     
     # Iterate
-    for t in float_range(step):
+    t = 0
+    while t < 1 + step:
         # Find the next point
         xf = eval_poly(coeffx, t)
         yf = eval_poly(coeffy, t)
         # Add the edge (xi, yi) => (xf, yf)
         add_edge(points, xi, yi, 0, xf, yf, 0)
+        print 'x: ', xi, xf, 'y: ', yi, yf
         # Advance the point-er
+        t += step
         xi = xf
         yi = yf
 
