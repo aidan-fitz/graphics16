@@ -37,6 +37,11 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         print "(%.0f, %.0f)" % (x1, y1)
         print "(%.0f, %.0f)" % (x2, y2)
         print "(%.0f, %.0f)" % (x3, y3)
+        # Draw dots at the guide points for debugging purposes
+        add_circle( points, x0, y0, 0, 2, 0.125)
+        add_circle( points, x1, y1, 0, 2, 0.125)
+        add_circle( points, x2, y2, 0, 2, 0.125)
+        add_circle( points, x3, y3, 0, 2, 0.125)
     
     # Generate curve coefficients
     coeffx = generate_curve_coeffs(x0, x1, x2, x3, T)
