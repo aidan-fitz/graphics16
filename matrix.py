@@ -30,9 +30,24 @@ def make_hermite():
 
 def generate_curve_coeffs( p1, p2, p3, p4, t ):
     # It's a column vector
-    coeffs = [[p1, p2, p3, p4]]
-    matrix_mult(t, coeffs)
-    return coeffs[0]
+    coefs = new_matrix(4, 1)
+    inverse = None
+
+    if t == 'bezier':
+        inverse = make_bezier()
+        coefs[0][0] = p1
+        coefs[0][1] = p2
+        coefs[0][2] = p3
+        coefs[0][3] = p4
+    else:
+        inverse = make_hermite()
+        coefs[0][0] = p1
+        coefs[0][1] = p3
+        coefs[0][2] = p2 - p1
+        coefs[0][3] = p4 - p3
+
+    matrix_mult(inverse, coefs)
+    return coefs[0]
 
 def eval_poly(coeffs, t):
     y = 0

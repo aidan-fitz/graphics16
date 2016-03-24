@@ -2,6 +2,48 @@ from display import *
 from matrix import *
 from math import *
 
+class BoxVertices:
+    def __init__(self, x, y, z, width, height, depth):
+        self.i = 0
+        self.x0 = x
+        self.y0 = y
+        self.z0 = z
+        self.x1 = x + width
+        self.y1 = y + height
+        self.z1 = z + depth
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.i > 7:
+            raise StopIteration
+        else:
+            L = []
+            L.append(x0 if i & 1 else x1)
+            L.append(y0 if i & 2 else y1)
+            L.append(z0 if i & 4 else z1)
+            i += 1
+            return (L[0], L[1], L[2])
+
+def add_box( points, x, y, z, width, height, depth ):
+    for px, py, pz in BoxVertices(x, y, z, width, height, depth):
+        add_edge(points, px, py, pz, px, py, pz)
+
+def add_sphere( points, cx, cy, cz, r, step ):
+    return 0
+
+def generate_sphere( points, cx, cy, cz, r, step ):
+    return 0
+
+def add_torus( points, cx, cy, cz, r0, r1, step ):
+    return 0
+
+def generate_torus( points, cx, cy, cz, r0, r1, step ):
+    return 0
+
+
+
 def add_circle( points, cx, cy, cz, r, step ):
     # Find the first point
     x0 = cx + r
@@ -25,27 +67,10 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
     # Find the first point
     xi = x0
     yi = y0
-    # Setup transformation matrix
-    T = None
-    if curve_type == HERMITE:
-        T = make_hermite()
-        print "(%.0f, %.0f)" % (x0, y0)
-        print "(%.0f, %.0f)" % (x2, y2)
-    elif curve_type == BEZIER:
-        T = make_bezier()
-        print "(%.0f, %.0f)" % (x0, y0)
-        print "(%.0f, %.0f)" % (x1, y1)
-        print "(%.0f, %.0f)" % (x2, y2)
-        print "(%.0f, %.0f)" % (x3, y3)
-        # Draw dots at the guide points for debugging purposes
-        add_circle( points, x0, y0, 0, 2, 0.125)
-        add_circle( points, x1, y1, 0, 2, 0.125)
-        add_circle( points, x2, y2, 0, 2, 0.125)
-        add_circle( points, x3, y3, 0, 2, 0.125)
     
     # Generate curve coefficients
-    coeffx = generate_curve_coeffs(x0, x1, x2, x3, T)
-    coeffy = generate_curve_coeffs(y0, y1, y2, y3, T)
+    coeffx = generate_curve_coeffs(x0, x1, x2, x3, curve_type)
+    coeffy = generate_curve_coeffs(y0, y1, y2, y3, curve_type)
     
     # Iterate
     t = 0
