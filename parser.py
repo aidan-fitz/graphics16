@@ -89,7 +89,7 @@ def parse_file( fname, points, transform, screen, color ):
                 r = float(args[2])
                 R = float(args[3])
                 step = 1/round(4 * sqrt(r))
-                add_sphere(points, x, y, z, r, R, step)
+                add_torus(points, x, y, z, r, R, step)
 
 
             # clear edge matrix

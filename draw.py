@@ -32,14 +32,14 @@ def add_box( points, x, y, z, width, height, depth ):
 
 def add_sphere( points, cx, cy, cz, r, step ):
     sphere = generate_sphere(cx, cy, cz, r, step)
-    for P in sphere:
-        points.extend([P, P])
+    for x, y, z in sphere:
+        add_edge(points, x, y, z, x, y, z)
 
 def generate_sphere(cx, cy, cz, r, step ):
     points = []
     # Add the top and bottom points only once
-    points.append([r, 0, 0, 1])
-    points.append([-r, 0, 0, 1])
+    points.append((r, 0, 0))
+    points.append((-r, 0, 0))
     # then start with theta and phi
     d_theta = step * pi
     d_phi = d_theta * 2
@@ -54,15 +54,16 @@ def generate_sphere(cx, cy, cz, r, step ):
         while phi < tau:
             y = w * cos(phi)
             z = w * sin(phi)
-            points.append([x + cx, y + cy, z + cz, 1])
+            points.append((x + cx, y + cy, z + cz))
             phi += d_phi
         theta += d_theta
+    print points[0]
     return points
 
 def add_torus( points, cx, cy, cz, r, R, step ):
     torus = generate_torus(cx, cy, cz, r, R, step)
-    for P in torus:
-        points.extend([P, P])
+    for x, y, z in torus:
+        add_edge(points, x, y, z, x, y, z)
 
 def generate_torus(cx, cy, cz, r, R, step ):
     points = []
@@ -79,7 +80,7 @@ def generate_torus(cx, cy, cz, r, R, step ):
         while phi < tau:
             y = w * cos(phi)
             z = w * sin(phi)
-            points.append([x + cx, y + cy, z + cz, 1])
+            points.append((x + cx, y + cy, z + cz))
             phi += dt
         theta += dt
     return points
