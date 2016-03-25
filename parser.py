@@ -74,9 +74,23 @@ def parse_file( fname, points, transform, screen, color ):
                 depth = float(args[5])
                 add_box(edges, x, y, z, width, height, depth)
             elif cmd == 'sphere':
-                pass
+                args = next(itr).split()
+                x = float(args[0])
+                y = float(args[1])
+                z = 0
+                r = float(args[2])
+                step = 1/round(4 * sqrt(r))
+                add_sphere(points, x, y, z, r, step)
             elif cmd == 'torus':
-                pass
+                args = next(itr).split()
+                x = float(args[0])
+                y = float(args[1])
+                z = 0
+                r = float(args[2])
+                R = float(args[3])
+                step = 1/round(4 * sqrt(r))
+                add_sphere(points, x, y, z, r, R, step)
+
 
             # clear edge matrix
             elif cmd == "clear":
@@ -135,3 +149,7 @@ def parse_file( fname, points, transform, screen, color ):
                         save_extension(screen, fname)
             elif cmd == "quit":
                 return
+            
+            # handle invalid commands
+            else:
+                print 'Invalid command:', cmd

@@ -24,24 +24,66 @@ class BoxVertices:
             L.append(self.y0 if self.i & 2 else self.y1)
             L.append(self.z0 if self.i & 4 else self.z1)
             self.i += 1
-            return (L[0], L[1], L[2])
+            return tuple(L)
 
 def add_box( points, x, y, z, width, height, depth ):
     for px, py, pz in BoxVertices(x, y, z, width, height, depth):
         add_edge(points, px, py, pz, px, py, pz)
 
 def add_sphere( points, cx, cy, cz, r, step ):
-    return 0
+    sphere = generate_sphere(cx, cy, cz, r, step)
+    for P in sphere:
+        points.extend([P, P])
 
-def generate_sphere( points, cx, cy, cz, r, step ):
-    return 0
+def generate_sphere(cx, cy, cz, r, step ):
+    points = []
+    # Add the top and bottom points only once
+    points.append([r, 0, 0, 1])
+    points.append([-r, 0, 0, 1])
+    # then start with theta and phi
+    d_theta = step * pi
+    d_phi = d_theta * 2
+    theta = d_theta
+    phi = d_phi
+    # cache tau
+    tau = 2 * pi
+    while theta < pi:
+        # cache cos and sin while the same theta is in use
+        x = r * cos(theta)
+        w = r * sin(theta)
+        while phi < tau:
+            y = w * cos(phi)
+            z = w * sin(phi)
+            points.append([x + cx, y + cy, z + cz, 1])
+            phi += d_phi
+        theta += d_theta
+    return points
 
-def add_torus( points, cx, cy, cz, r0, r1, step ):
-    return 0
+def add_torus( points, cx, cy, cz, r, R, step ):
+    torus = generate_torus(cx, cy, cz, r, R, step)
+    for P in torus:
+        points.extend([P, P])
 
-def generate_torus( points, cx, cy, cz, r0, r1, step ):
-    return 0
-
+def generate_torus(cx, cy, cz, r, R, step ):
+    points = []
+    # cache tau
+    tau = 2 * pi
+    # start with theta and phi
+    dt = step * tau
+    theta = 0
+    phi = 0
+    while theta < tau:
+        # cache cos and sin while the same theta is in use
+        x = r * cos(theta)
+        w = r * sin(theta) + R
+        while phi < tau:
+            y = w * cos(phi)
+            z = w * sin(phi)
+            points.append([x + cx, y + cy, z + cz, 1])
+            phi += dt
+        theta += dt
+    return points
+    
 
 
 def add_circle( points, cx, cy, cz, r, step ):
@@ -49,10 +91,12 @@ def add_circle( points, cx, cy, cz, r, step ):
     x0 = cx + r
     y0 = cy
     t = 0
+
+    tau = 2*pi
     while t < 1 + step:
         # Find the next point
-        x1 = cx + r * cos(t * 2 * pi)
-        y1 = cy + r * sin(t * 2 * pi)
+        x1 = cx + r * cos(t * tau)
+        y1 = cy + r * sin(t * tau)
         # Add the edge (x0, y0) => (x1, y1)
         add_edge(points, x0, y0, cz, x1, y1, cz)
         # Advance the point-er
