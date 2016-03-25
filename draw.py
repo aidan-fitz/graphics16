@@ -20,10 +20,10 @@ class BoxVertices:
             raise StopIteration
         else:
             L = []
-            L.append(x0 if i & 1 else x1)
-            L.append(y0 if i & 2 else y1)
-            L.append(z0 if i & 4 else z1)
-            i += 1
+            L.append(self.x0 if self.i & 1 else self.x1)
+            L.append(self.y0 if self.i & 2 else self.y1)
+            L.append(self.z0 if self.i & 4 else self.z1)
+            self.i += 1
             return (L[0], L[1], L[2])
 
 def add_box( points, x, y, z, width, height, depth ):
