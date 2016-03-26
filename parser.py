@@ -73,6 +73,7 @@ def parse_file( fname, points, transform, screen, color ):
                 height = float(args[4])
                 depth = float(args[5])
                 add_box(edges, x, y, z, width, height, depth)
+                modified = True
             elif cmd == 'sphere':
                 args = next(itr).split()
                 x = float(args[0])
@@ -81,6 +82,7 @@ def parse_file( fname, points, transform, screen, color ):
                 r = float(args[2])
                 step = 1/round(4 * sqrt(r))
                 add_sphere(points, x, y, z, r, step)
+                modified = True
             elif cmd == 'torus':
                 args = next(itr).split()
                 x = float(args[0])
@@ -90,11 +92,13 @@ def parse_file( fname, points, transform, screen, color ):
                 R = float(args[3])
                 step = 1/round(4 * sqrt(r))
                 add_torus(points, x, y, z, r, R, step)
+                modified = True
 
 
             # clear edge matrix
             elif cmd == "clear":
                 edges = []
+                modified = True
 
             # matrix control operations
             elif cmd == "ident":

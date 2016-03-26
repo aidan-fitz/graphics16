@@ -33,6 +33,7 @@ def add_box( points, x, y, z, width, height, depth ):
 def add_sphere( points, cx, cy, cz, r, step ):
     sphere = generate_sphere(cx, cy, cz, r, step)
     for x, y, z in sphere:
+        #print (x, y, z)
         add_edge(points, x, y, z, x, y, z)
 
 def generate_sphere(cx, cy, cz, r, step ):
@@ -44,20 +45,21 @@ def generate_sphere(cx, cy, cz, r, step ):
     d_theta = step * pi
     d_phi = d_theta * 2
     theta = d_theta
-    phi = d_phi
     # cache tau
     tau = 2 * pi
     while theta < pi:
         # cache cos and sin while the same theta is in use
         x = r * cos(theta)
         w = r * sin(theta)
+        # Need to reset phi
+        phi = d_phi
         while phi < tau:
+            print theta, phi
             y = w * cos(phi)
             z = w * sin(phi)
             points.append((x + cx, y + cy, z + cz))
             phi += d_phi
         theta += d_theta
-    print points[0]
     return points
 
 def add_torus( points, cx, cy, cz, r, R, step ):
@@ -72,12 +74,14 @@ def generate_torus(cx, cy, cz, r, R, step ):
     # start with theta and phi
     dt = step * tau
     theta = 0
-    phi = 0
     while theta < tau:
         # cache cos and sin while the same theta is in use
         x = r * cos(theta)
         w = r * sin(theta) + R
+        # Need to reset phi
+        phi = 0
         while phi < tau:
+            print theta, phi
             y = w * cos(phi)
             z = w * sin(phi)
             points.append((x + cx, y + cy, z + cz))
