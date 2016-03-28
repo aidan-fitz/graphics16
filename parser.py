@@ -137,7 +137,7 @@ def parse_file( fname, edges, T, screen, pen ):
                     draw_lines(edges, screen, pen)
                     modified = False
                     # if the filename isn't specified, do nothing
-                fname = next(itr, None)
+                fname = next(itr, None).strip()
                 if fname is not None:
                     if fname[-4:].lower() == ".ppm":
                         save_ppm(screen, fname)
