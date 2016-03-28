@@ -3,17 +3,9 @@ from matrix import *
 from draw import *
 from math import *
 
-def parse_file( fname, points, transform, screen, color ):
-    # Setup screen
-    screen = new_screen()
+def parse_file( fname, edges, T, screen, pen ):
     # flag for whether image was modified
     modified = False
-    # pen color
-    pen = [0, 255, 0]
-    
-    # Setup edges as empty list
-    edges = []
-    T = new_matrix()
     
     # Iterating over the file so we can keep it open
     # Allows us to use stdin
@@ -81,7 +73,7 @@ def parse_file( fname, points, transform, screen, color ):
                 z = 0
                 r = float(args[2])
                 step = 1/round(4 * sqrt(r))
-                add_sphere(points, x, y, z, r, step)
+                add_sphere(edges, x, y, z, r, step)
                 modified = True
             elif cmd == 'torus':
                 args = next(itr).split()
@@ -91,9 +83,8 @@ def parse_file( fname, points, transform, screen, color ):
                 r = float(args[2])
                 R = float(args[3])
                 step = 1/round(4 * sqrt(r))
-                add_torus(points, x, y, z, r, R, step)
+                add_torus(edges, x, y, z, r, R, step)
                 modified = True
-
 
             # clear edge matrix
             elif cmd == "clear":

@@ -32,9 +32,11 @@ def add_box( points, x, y, z, width, height, depth ):
 
 def add_sphere( points, cx, cy, cz, r, step ):
     sphere = generate_sphere(cx, cy, cz, r, step)
+    print len(points)
     for x, y, z in sphere:
-        #print (x, y, z)
+        print (x, y, z)
         add_edge(points, x, y, z, x, y, z)
+    print len(points)
 
 def generate_sphere(cx, cy, cz, r, step ):
     points = []
@@ -54,7 +56,7 @@ def generate_sphere(cx, cy, cz, r, step ):
         # Need to reset phi
         phi = d_phi
         while phi < tau:
-            print theta, phi
+            #print theta, phi
             y = w * cos(phi)
             z = w * sin(phi)
             points.append((x + cx, y + cy, z + cz))
@@ -65,6 +67,7 @@ def generate_sphere(cx, cy, cz, r, step ):
 def add_torus( points, cx, cy, cz, r, R, step ):
     torus = generate_torus(cx, cy, cz, r, R, step)
     for x, y, z in torus:
+        print (x, y, z)
         add_edge(points, x, y, z, x, y, z)
 
 def generate_torus(cx, cy, cz, r, R, step ):
@@ -81,7 +84,7 @@ def generate_torus(cx, cy, cz, r, R, step ):
         # Need to reset phi
         phi = 0
         while phi < tau:
-            print theta, phi
+            #print theta, phi
             y = w * cos(phi)
             z = w * sin(phi)
             points.append((x + cx, y + cy, z + cz))
@@ -137,7 +140,7 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
 
 def draw_lines( matrix, screen, color ):
     if len( matrix ) < 2:
-        print "Need at least 2 points to draw a line"
+        raise ValueError("Need at least 2 points to draw a line")
         
     p = 0
     while p < len( matrix ) - 1:
