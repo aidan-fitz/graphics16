@@ -1,6 +1,7 @@
 from display import *
 from matrix import *
 from draw import *
+from draw3d import *
 from math import *
 
 def parse_file( fname, edges, T, screen, pen ):
