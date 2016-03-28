@@ -52,7 +52,7 @@ def generate_sphere(cx, cy, cz, r, step ):
         x = r * cos(theta)
         w = r * sin(theta)
         # Need to reset phi
-        phi = d_phi
+        phi = 0
         while phi < tau:
             #print theta, phi
             y = w * cos(phi)
