@@ -30,11 +30,8 @@ def add_box( points, x, y, z, width, height, depth ):
 
 def add_sphere( points, cx, cy, cz, r, step ):
     sphere = generate_sphere(cx, cy, cz, r, step)
-    print len(points)
     for x, y, z in sphere:
-        print (x, y, z)
         add_edge(points, x, y, z, x, y, z)
-    print len(points)
 
 def generate_sphere(cx, cy, cz, r, step ):
     points = []
@@ -65,7 +62,6 @@ def generate_sphere(cx, cy, cz, r, step ):
 def add_torus( points, cx, cy, cz, r, R, step ):
     torus = generate_torus(cx, cy, cz, r, R, step)
     for x, y, z in torus:
-        print (x, y, z)
         add_edge(points, x, y, z, x, y, z)
 
 def generate_torus(cx, cy, cz, r, R, step ):
