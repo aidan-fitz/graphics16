@@ -1,0 +1,9 @@
+torus
+0 300 30 90
+translate
+0 0 200
+torus
+0 300 30 90
+zrotate
+90
+display
