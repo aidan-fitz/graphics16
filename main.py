@@ -9,8 +9,10 @@ from matrix import *
 import sys
 
 screen = new_screen()
-color = [ 0, 255, 0 ]
+pen2d = [0, 255, 0]
+pen3d = [255, 0, 255]
 edges = []
+polygons = []
 transform = new_matrix()
 
 fname = None
@@ -19,4 +21,4 @@ if len(sys.argv) >= 2:
 else:
     fname = 'script_nocurves'
 
-parse_file( fname, edges, transform, screen, color )
+parse_file( fname, edges, polygons, transform, screen, pen2d, pen3d )
