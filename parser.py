@@ -4,7 +4,7 @@ from draw import *
 from draw3d import *
 from math import *
 
-def parse_file( fname, edges, T, screen, pen ):
+def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
     # flag for whether image was modified
     modified = False
     
@@ -65,7 +65,7 @@ def parse_file( fname, edges, T, screen, pen ):
                 width = float(args[3])
                 height = float(args[4])
                 depth = float(args[5])
-                add_box(edges, x, y, z, width, height, depth)
+                add_box(polygons, x, y, z, width, height, depth)
                 modified = True
             elif cmd == 'sphere':
                 args = next(itr).split()
@@ -73,8 +73,8 @@ def parse_file( fname, edges, T, screen, pen ):
                 y = float(args[1])
                 z = 0
                 r = float(args[2])
-                step = 1/round(4 * sqrt(r))
-                add_sphere(edges, x, y, z, r, step)
+                step = round(4 * sqrt(r))
+                add_sphere(polygons, x, y, z, r, step)
                 modified = True
             elif cmd == 'torus':
                 args = next(itr).split()
@@ -83,13 +83,14 @@ def parse_file( fname, edges, T, screen, pen ):
                 z = 0
                 r = float(args[2])
                 R = float(args[3])
-                step = 1/round(4 * sqrt(r))
-                add_torus(edges, x, y, z, r, R, step)
+                step = round(4 * sqrt(r))
+                add_torus(polygons, x, y, z, r, R, step)
                 modified = True
 
             # clear edge matrix
             elif cmd == "clear":
                 edges = []
+                polygons = []
                 modified = True
 
             # matrix control operations
@@ -120,6 +121,7 @@ def parse_file( fname, edges, T, screen, pen ):
                 matrix_mult(u, T)
             elif cmd == "apply":
                 matrix_mult(T, edges)
+                matrix_mult(T, polygons)
                 modified = True
 
             # engine control operations
@@ -127,14 +129,16 @@ def parse_file( fname, edges, T, screen, pen ):
                 if modified:
                     print "Redraw"
                     clear_screen(screen)
-                    draw_lines(edges, screen, pen)
+                    draw_lines(edges, screen, pen2d)
+                    draw_polygons(polygons, screen, pen3d)
                     modified = False
                 display(screen)
             elif cmd == "save":
                 if modified:
                     print "Redraw"
                     clear_screen(screen)
-                    draw_lines(edges, screen, pen)
+                    draw_lines(edges, screen, pen2d)
+                    draw_polygons(polygons, screen, pen3d)
                     modified = False
                     # if the filename isn't specified, do nothing
                 fname = next(itr, None).strip()

@@ -47,7 +47,10 @@ def add_curve( points, x0, y0, x1, y1, x2, y2, x3, y3, step, curve_type ):
         yi = yf
 
 def draw_lines( matrix, screen, color ):
-    if len( matrix ) < 2:
+    if len(matrix) == 0:
+        return
+
+    if len(matrix) % 2:
         raise ValueError("Need at least 2 points to draw a line")
         
     p = 0
@@ -55,6 +58,8 @@ def draw_lines( matrix, screen, color ):
         draw_line( screen, matrix[p][0], matrix[p][1],
                    matrix[p+1][0], matrix[p+1][1], color )
         p += 2
+
+# Routines for working with edge matrices
 
 def add_edge( matrix, x0, y0, z0, x1, y1, z1 ):
     add_point( matrix, x0, y0, z0 )
