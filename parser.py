@@ -73,7 +73,7 @@ def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
                 y = float(args[1])
                 z = 0
                 r = float(args[2])
-                step = round(4 * sqrt(r))
+                step = int(round(2 * sqrt(r)))
                 add_sphere(polygons, x, y, z, r, step)
                 modified = True
             elif cmd == 'torus':
@@ -83,7 +83,7 @@ def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
                 z = 0
                 r = float(args[2])
                 R = float(args[3])
-                step = round(4 * sqrt(r))
+                step = int(round(2 * sqrt(r)))
                 add_torus(polygons, x, y, z, r, R, step)
                 modified = True
 

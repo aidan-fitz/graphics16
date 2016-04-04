@@ -59,12 +59,14 @@ def generate_sphere(cx, cy, cz, r, step ):
     d_phi = tau / step
     d_theta = pi / step
     phi = 0
+
     while phi < tau:
         # templates for x, y
         tx = r * cos(phi)
         ty = r * sin(phi)
         # Need to reset theta
         theta = 0
+
         while theta <= pi:
             w = sin(theta)
             x = tx * w
@@ -72,6 +74,7 @@ def generate_sphere(cx, cy, cz, r, step ):
             z = r * cos(theta)
             points.append((x + cx, y + cy, z + cz))
             theta += d_theta
+
         phi += d_phi
     return points
 
@@ -91,10 +94,27 @@ def generate_sphere(cx, cy, cz, r, step ):
     return points'''
 
 def add_torus( points, cx, cy, cz, r, R, step ):
-    torus = generate_torus(cx, cy, cz, r, R, step)
+    rows = generate_torus(cx, cy, cz, r, R, step)
+
+    for row, col in [(r, c) for r in range(step) for c in range(step)]:
+        row1p = (row + 1) % step
+        col1p = (col + 1) % step
+
+        # Pray to None that this is counterclockwise
+        x0, y0, z0 = rows[row][col]
+        x1, y1, z1 = rows[row1p][col]
+        x2, y2, z2 = rows[row1p][col1p]
+        x3, y3, z3 = rows[row][col1p]
+        add_quad(points, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3)
+
+'''
     for x, y, z in torus:
         add_triangle(points, x, y, z, x, y, z, x, y, z)
+'''
 
+# Returns n rows and n columns of points (an array of n rows)
+# Each column is a "small" circle
+# Each row is a "big" circle in the yz plane
 def generate_torus(cx, cy, cz, r, R, step ):
     points = []
     # cache tau
@@ -102,18 +122,23 @@ def generate_torus(cx, cy, cz, r, R, step ):
     # start with theta and phi
     dt = tau / step
     theta = 0
+
     while theta < tau:
         # cache cos and sin while the same theta is in use
         x = r * cos(theta)
         w = r * sin(theta) + R
         # Need to reset phi
         phi = 0
+
+        row = []
         while phi < tau:
             #print theta, phi
             y = w * cos(phi)
             z = w * sin(phi)
-            points.append((x + cx, y + cy, z + cz))
+            row.append((x + cx, y + cy, z + cz))
             phi += dt
+        points.append(row)
+
         theta += dt
     return points
 
