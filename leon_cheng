@@ -1,0 +1,137 @@
+# COLOR
+color
+255 100 255
+# LINE
+line
+0 0 -320 0 0 20
+# CIRCLES
+ident
+translate
+0 0 300
+apply
+circle
+0 0 40
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 35
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 30
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 25
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 20
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 15
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 10
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 10
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 15
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 20
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 25
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 25
+ident
+translate
+0 0 -20
+apply
+circle
+0 0 30
+ident
+translate
+0 0 -20
+apply
+ident
+circle
+0 0 35
+ident
+translate
+0 0 -20
+apply
+ident
+circle
+0 0 40
+ident
+translate
+0 0 -20
+apply
+ident
+translate
+0 0 170
+apply
+# SPHERE
+sphere
+0 0 20
+# TORUS
+ident
+xrotate
+90
+apply
+torus
+0 0 35 190
+ident
+xrotate
+-90
+apply
+# ROTATE
+ident
+xrotate
+90
+zrotate
+-40
+yrotate
+25
+translate
+250 250 0
+apply
+# DISPLAY AND SAVE
+display
+save
+cool.png
+quit
