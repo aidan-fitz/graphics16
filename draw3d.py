@@ -44,13 +44,49 @@ def add_box( points, x, y, z, width, height, depth ):
         x3, y3, z3 = vertices[face[3]]
         add_quad(points, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3)
 
-# step == number of steps (# points per ring)
+# 'step' == number of steps (# points per ring)
 
+# Generates 'step' rows and 'step' columns of shapes
+# * 1 top row of triangles
+# * 'step - 2' middle rows of quadrilaterals
+# * 1 bottom row of triangles
 def add_sphere( points, cx, cy, cz, r, step ):
-    sphere = generate_sphere(cx, cy, cz, r, step)
+    columns = generate_sphere(cx, cy, cz, r, step)
+
+    for row, col in [(r, c) for r in range(step) for c in range(step)]:
+        row1p = row + 1
+        col1p = (col + 1) % step
+
+        # Top row of triangles
+        if row == 0:
+            x0, y0, z0 = columns[col][row]
+            x1, y1, z1 = columns[col][row1p]
+            x2, y2, z2 = columns[col1p][row1p]
+            add_triangle(points, x0, y0, z0, x1, y1, z1, x2, y2, z2)
+
+        # Middle row
+        elif row < step - 1:
+            x0, y0, z0 = columns[col][row]
+            x1, y1, z1 = columns[col][row1p]
+            x2, y2, z2 = columns[col1p][row1p]
+            x3, y3, z3 = columns[col1p][row]
+            add_quad(points, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3)
+        
+        # Bottom row
+        else:
+            x0, y0, z0 = columns[col][row]
+            x1, y1, z1 = columns[col][row1p]
+            x2, y2, z2 = columns[col1p][row]
+            add_triangle(points, x0, y0, z0, x1, y1, z1, x2, y2, z2)
+
+'''
     for x, y, z in sphere:
         add_triangle(points, x, y, z, x, y, z, x, y, z)
+'''
 
+# Generates 'step + 1' rows and 'step' columns of points (an array of 'step' columns)
+# Each column is a semicircle
+# Each row is a circle
 def generate_sphere(cx, cy, cz, r, step ):
     points = []
     # cache tau
@@ -67,13 +103,15 @@ def generate_sphere(cx, cy, cz, r, step ):
         # Need to reset theta
         theta = 0
 
+        col = []
         while theta <= pi:
             w = sin(theta)
             x = tx * w
             y = ty * w
             z = r * cos(theta)
-            points.append((x + cx, y + cy, z + cz))
+            col.append((x + cx, y + cy, z + cz))
             theta += d_theta
+        points.append(col)
 
         phi += d_phi
     return points
@@ -93,6 +131,7 @@ def generate_sphere(cx, cy, cz, r, step ):
         theta += d_theta
     return points'''
 
+# Generates 'step' rows and 'step' columns of quadrilaterals
 def add_torus( points, cx, cy, cz, r, R, step ):
     rows = generate_torus(cx, cy, cz, r, R, step)
 
@@ -112,7 +151,7 @@ def add_torus( points, cx, cy, cz, r, R, step ):
         add_triangle(points, x, y, z, x, y, z, x, y, z)
 '''
 
-# Returns n rows and n columns of points (an array of n rows)
+# Generates 'step' rows and 'step' columns of points (an array of 'step' rows)
 # Each column is a "small" circle
 # Each row is a "big" circle in the yz plane
 def generate_torus(cx, cy, cz, r, R, step ):
