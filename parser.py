@@ -83,7 +83,7 @@ def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
                 z = 0
                 r = float(args[2])
                 R = float(args[3])
-                step = int(round(2 * sqrt(r)))
+                step = int(round(3 * sqrt(r)))
                 add_torus(polygons, x, y, z, r, R, step)
                 modified = True
 
