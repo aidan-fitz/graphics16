@@ -31,7 +31,7 @@ def add_box( points, x, y, z, width, height, depth ):
     back = [2, 3, 1, 0]
     front = [i + 4 for i in back[::-1]]
     bottom = [0, 1, 5, 4]
-    top = [(i + 6) % 8 for i in bottom[::-1]]
+    top = [(i + 6) % 8 for i in bottom]
     left = [0, 4, 6, 2]
     right = [i + 1 for i in left[::-1]]
 
