@@ -220,7 +220,7 @@ def draw_triangle(matrix, index, screen, color):
     nz = ax * by - bx * ay
 
     # if True:
-    if nz >= 0:
+    if nz > 0:
         edges = [p0, p1, p1, p2, p2, p0]
         draw_lines(edges, screen, color)
 
