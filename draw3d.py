@@ -199,8 +199,28 @@ def draw_polygons(matrix, screen, color):
     if len(matrix) % 3:
         raise ValueError("Need 3 points to draw a triangle")
 
-    p = 0
-    while p < len(matrix) - 2:
-        edges = [matrix[p], matrix[p+1], matrix[p+1], matrix[p+2], matrix[p+2], matrix[p]]
+    for p in range(0, len(matrix), 3):
+        draw_triangle(matrix, p, screen, color)
+
+def draw_triangle(matrix, index, screen, color):
+    # Shorthand for the three vertices
+    p0 = matrix[index]
+    p1 = matrix[index + 1]
+    p2 = matrix[index + 2]
+
+    # Scalar triple product of two edges a, b and the view vector k (kab) == k . a x b
+    # We only need the x and y components since they will be included in the z component of a x b
+
+    ax = p1[0] - p0[0]
+    ay = p1[1] - p0[1]
+
+    bx = p2[0] - p0[0]
+    by = p2[1] - p0[1]
+
+    nz = ax * by - bx * ay
+
+    # if True:
+    if nz >= 0:
+        edges = [p0, p1, p1, p2, p2, p0]
         draw_lines(edges, screen, color)
-        p += 3
+
