@@ -53,6 +53,8 @@ translate
 250 250 0
 apply
 display
+save
+ball.png
 
 #clear the edge matrix, test torus
 clear
