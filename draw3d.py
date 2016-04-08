@@ -79,11 +79,6 @@ def add_sphere( points, cx, cy, cz, r, step ):
             x2, y2, z2 = columns[col1p][row]
             add_triangle(points, x0, y0, z0, x1, y1, z1, x2, y2, z2)
 
-'''
-    for x, y, z in sphere:
-        add_triangle(points, x, y, z, x, y, z, x, y, z)
-'''
-
 # Generates 'step + 1' rows and 'step' columns of points (an array of 'step' columns)
 # Each column is a semicircle
 # Each row is a circle
@@ -116,20 +111,6 @@ def generate_sphere(cx, cy, cz, r, step ):
         phi += d_phi
     return points
 
-''' while theta <= pi:
-        # cache cos and sin while the same theta is in use
-        x = r * cos(theta)
-        w = r * sin(theta)
-        # Need to reset phi
-        phi = 0
-        while phi < tau:
-            #print theta, phi
-            y = w * cos(phi)
-            z = w * sin(phi)
-            points.append((x + cx, y + cy, z + cz))
-            phi += d_phi
-        theta += d_theta
-    return points'''
 
 # Generates 'step' rows and 'step' columns of quadrilaterals
 def add_torus( points, cx, cy, cz, r, R, step ):
@@ -145,11 +126,6 @@ def add_torus( points, cx, cy, cz, r, R, step ):
         x2, y2, z2 = rows[row1p][col1p]
         x3, y3, z3 = rows[row][col1p]
         add_quad(points, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3)
-
-'''
-    for x, y, z in torus:
-        add_triangle(points, x, y, z, x, y, z, x, y, z)
-'''
 
 # Generates 'step' rows and 'step' columns of points (an array of 'step' rows)
 # Each column is a "small" circle
@@ -208,19 +184,41 @@ def draw_triangle(matrix, index, screen, color):
     p1 = matrix[index + 1]
     p2 = matrix[index + 2]
 
-    # Scalar triple product of two edges a, b and the view vector k (kab) == k . a x b
-    # We only need the x and y components since they will be included in the z component of a x b
+    normal = surface_normal(matrix, index)
 
-    ax = p1[0] - p0[0]
-    ay = p1[1] - p0[1]
-
-    bx = p2[0] - p0[0]
-    by = p2[1] - p0[1]
-
-    nz = ax * by - bx * ay
+    # default is [0, 0, 1]
+    view = [0, -1, 0] #, 1]
 
     # if True:
-    if nz > 0:
+    if dot_product(view, normal) > 0:
         edges = [p0, p1, p1, p2, p2, p0]
         draw_lines(edges, screen, color)
 
+def surface_normal(matrix, index):
+    # Shorthand for the three vertices
+    p0 = matrix[index]
+    p1 = matrix[index + 1]
+    p2 = matrix[index + 2]
+
+    # the 2 edge vectors
+    a = [p1[i] - p0[i] for i in range(3)]
+    b = [p2[i] - p0[i] for i in range(3)]
+
+    # Area of triangle is half the cross product
+    return [c / 2 for c in cross_product(a, b)]
+
+def cross_product(a, b):
+    if len(a) == len(b) == 3:
+        return [a[(i+1) % 3] * b[(i+2) % 3] - a[(i+2) % 3] * b[(i+1) % 3] for i in range(3)]
+    else:
+        # Technically, cross product is also defined for 7-D vectors, but we're not working in 7-D are we?
+        raise ValueError("Cross product defined only for vectors of dimension 3")
+
+def dot_product(a, b):
+    if len(a) == len(b):
+        return sum([a[i] * b[i] for i in range(len(a))])
+    else:
+        raise ValueError("Dot product defined only for vectors of same dimension")
+
+def scalar_triple_product(a, b, c):
+    return dot_product(a, cross_product(b, c))
