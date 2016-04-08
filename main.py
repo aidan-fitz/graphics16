@@ -19,6 +19,6 @@ fname = None
 if len(sys.argv) >= 2:
     fname = sys.argv[1]
 else:
-    fname = 'script_nocurves'
+    fname = '/dev/stdin'
 
 parse_file( fname, edges, polygons, transform, screen, pen2d, pen3d )
