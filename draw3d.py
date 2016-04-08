@@ -140,7 +140,7 @@ def generate_torus(cx, cy, cz, r, R, step ):
 
     while theta < tau:
         # cache cos and sin while the same theta is in use
-        x = r * cos(theta)
+        y = r * cos(theta)
         w = r * sin(theta) + R
         # Need to reset phi
         phi = 0
@@ -148,7 +148,7 @@ def generate_torus(cx, cy, cz, r, R, step ):
         row = []
         while phi < tau:
             #print theta, phi
-            y = w * cos(phi)
+            x = w * cos(phi)
             z = w * sin(phi)
             row.append((x + cx, y + cy, z + cz))
             phi += dt
@@ -187,12 +187,27 @@ def draw_triangle(matrix, index, screen, color):
     normal = surface_normal(matrix, index)
 
     # default is [0, 0, 1]
-    view = [0, -1, 0] #, 1]
+    view = [0, 0, 1]
 
-    # if True:
-    if dot_product(view, normal) > 0:
-        edges = [p0, p1, p1, p2, p2, p0]
+    edges = [p0, p1, p1, p2, p2, p0]
+
+    frontness = dot_product(view, normal)
+
+    # Front faces
+    if frontness > 0:
         draw_lines(edges, screen, color)
+
+'''
+# Uncomment for debugging purposes
+    # Faces perpendicular to view vector
+    elif frontness == 0:
+        draw_lines(edges, screen, [(v + 64) / 2 for v in color])
+
+    # Back faces
+    else:
+        draw_lines(edges, screen, [64]*3)
+'''
+
 
 def surface_normal(matrix, index):
     # Shorthand for the three vertices

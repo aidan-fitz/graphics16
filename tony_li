@@ -1,0 +1,26 @@
+sphere
+0 10 50
+ident
+translate
+-20 -20 0
+zrotate
+70
+apply
+torus
+0 -250 10 175
+torus
+0 -200 10 150
+torus
+0 -150 10 125
+torus
+0 -100 10 100
+ident
+xrotate
+10
+yrotate
+20
+translate
+250 350 0
+apply
+display
+quit

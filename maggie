@@ -1,0 +1,58 @@
+#make 2D basketball picture
+circle
+350 60 50
+bezier
+350 10 360 43 360 76 350 110
+bezier
+300 60 333 50 366 50 400 60
+bezier
+311 30 333 35 366 35 388 30
+bezier
+311 90 333 65 366 65 388 90
+#make hoop
+torus
+150 -120 5 35
+#make rings of net
+torus
+200 -120 1 22
+torus
+190 -120 0.25 24.6
+torus
+180 -120 0.25 27.2
+torus
+170 -120 0.25 29.8
+torus
+160 -120 0.25 32.4
+#make ball
+sphere
+100 -200 30
+#make backboard
+box
+0 0 -50 180 240 20
+#make box above hoop
+box
+90 -80 -50 60 80 5
+#make supports that hold backboard up above the ground
+box
+150 -120 -50 10 10 100
+box
+25 -120 -50 10 10 100
+box
+25 -120 -150 640 10 10
+#move so we can see it
+ident
+zrotate
+270
+translate
+240 180 0
+translate
+120 270 0
+xrotate
+20
+yrotate
+20
+apply
+display
+save
+boxtest.png
+quit

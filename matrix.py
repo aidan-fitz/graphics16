@@ -1,6 +1,53 @@
 import math
 
 def make_bezier():
+    b = new_matrix()
+    ident(b)
+    b[0][0] = -1
+    b[1][0] = 3
+    b[2][0] = -3
+    b[3][0] = 1
+
+    b[0][1] = 3
+    b[1][1] = -6
+    b[2][1] = 3
+    b[3][1] = 0
+
+    b[0][2] = -3
+    b[1][2] = 3
+    b[2][2] = 0
+    b[3][2] = 0
+
+    b[0][3] = 1
+    b[3][3] = 0
+    return b
+
+def make_hermite():
+    h = new_matrix()
+    ident(h)
+    h[0][0] = 2
+    h[1][0] = -2
+    h[2][0] = 1
+    h[3][0] = 1
+
+    h[0][1] = -3
+    h[1][1] = 3
+    h[2][1] = -2
+    h[3][1] = -1
+
+    h[0][2] = 0
+    h[1][2] = 0
+    h[2][2] = 1
+    h[3][2] = 0
+
+    h[0][3] = 1
+    h[3][3] = 0
+    return h
+
+
+
+'''
+def make_bezier():
     t = new_matrix()
     t[0][0] = 1
     t[1][0] = 3
@@ -16,17 +63,27 @@ def make_bezier():
 
 def make_hermite():
     t = new_matrix()
+
+    # Initial position of pen
     t[0][0] = 2
     t[0][1] = -2
     t[0][2] = 1
     t[0][3] = 1
-    t[1][0] = -3
-    t[1][1] = 3
-    t[1][2] = -2
-    t[1][3] = -1
-    t[2][2] = 1
+    
+    # Final position of pen
+    t[2][0] = -3
+    t[2][1] = 3
+    t[2][2] = -2
+    t[2][3] = -1
+
+    # Initial velocity
+    t[1][2] = 1
+
+    # Final velocity
     t[3][0] = 1
+
     return t
+'''
 
 def generate_curve_coeffs( p1, p2, p3, p4, t ):
     # It's a column vector
