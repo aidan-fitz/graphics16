@@ -9,11 +9,8 @@ from matrix import *
 import sys
 
 screen = new_screen()
-pen2d = [0, 255, 0]
-pen3d = [255, 0, 255]
-edges = []
+pen = [0, 255, 0]
 polygons = []
-transform = new_matrix()
 
 fname = None
 if len(sys.argv) >= 2:
@@ -21,4 +18,4 @@ if len(sys.argv) >= 2:
 else:
     fname = '/dev/stdin'
 
-parse_file( fname, edges, polygons, transform, screen, pen2d, pen3d )
+parse_file( fname, screen, pen )

@@ -1,4 +1,4 @@
-import matrix
+from matrix import matrix_mult as mmult
 
 class Stack:
     def __init__(self):
@@ -8,9 +8,18 @@ class Stack:
         self.stack.append(I)
 
     def push():
-        clone = [row[:] for row in self.stack[-1][:]]
+        clone = [row[:] for row in self.peek()[:]]
         self.stack.append(clone)
 
     def pop():
         if len(stack) > 1:
-            return self.stack.pop()
+            self.stack.pop()
+
+    def peek():
+        return self.stack[-1]
+
+    def mult(matrix):
+        mmult(matrix, self.peek())
+
+    def transform_points(points):
+        mmult(self.peek(), points)

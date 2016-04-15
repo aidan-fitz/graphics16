@@ -1,12 +1,15 @@
 from display import *
 from matrix import *
+from matrix import matrix_mult as mmult
 from draw import *
 from draw3d import *
 from math import *
 
-def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
-    # flag for whether image was modified
-    modified = False
+from stack import Stack
+
+def parse_file( fname, screen, pen ):
+    # transformation matrix stack
+    stack = Stack()
     
     # Iterating over the file so we can keep it open
     # Allows us to use stdin
@@ -15,7 +18,8 @@ def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
         
         # Do not loop through the list because we need to get multiple elements
         while True:
-            cmd = next(itr, "quit").strip().lower()
+            args = next(itr, "quit").strip().lower().split()
+            cmd = args.pop(0)
             
             # Skip comments and blank lines
             if cmd == '' or cmd[0] == '#':
@@ -25,128 +29,137 @@ def parse_file( fname, edges, polygons, T, screen, pen2d, pen3d ):
 
             # 2-D drawing routines
             if cmd == "line":
-                args = next(itr).split()
                 x0 = float(args[0])
                 y0 = float(args[1])
                 z0 = float(args[2])
                 x1 = float(args[3])
                 y1 = float(args[4])
                 z1 = float(args[5])
+
+                # Immediately draw line to screen
+                edges = []
                 add_edge(edges, x0, y0, z0, x1, y1, z1)
-                modified = True
+                mmult(stack.peek(), edges)
+                draw_lines(edges, screen, pen)
+                
             elif cmd == "circle" or cmd == "c":
-                args = next(itr).split()
                 cx = float(args[0])
                 cy = float(args[1])
                 cz = 0
                 r = float(args[2])
                 step = 1/round(4 * sqrt(r))
+
+                # Immediately draw curve to screen
+                edges = []
                 add_circle(edges, cx, cy, cz, r, step)
-                modified = True
+                mmult(stack.peek(), edges)
+                draw_lines(edges, screen, pen)
+
             elif cmd == "hermite" or cmd == "h":
-                args = next(itr).split()
                 x = [float(s) for s in args[:4]]
                 y = [float(s) for s in args[4:]]
+
+                # Immediately draw curve to screen
+                edges = []
                 add_curve(edges, x[0], x[1], x[2], x[3], y[0], y[1], y[2], y[3], 0.05, HERMITE)
-                modified = True
+                mmult(stack.peek(), edges)
+                draw_lines(edges, screen, pen)
+
             elif cmd == "bezier" or cmd == "b":
-                args = next(itr).split()
                 x = [float(s) for s in args[:4]]
                 y = [float(s) for s in args[4:]]
+
+                # Immediately draw curve to screen
+                edges = []
                 add_curve(edges, x[0], x[1], x[2], x[3], y[0], y[1], y[2], y[3], 0.05, BEZIER)
-                modified = True
-            
+                mmult(stack.peek(), edges)
+                draw_lines(edges, screen, pen)
+
             # 3-D drawing routines
             elif cmd == "box":
-                args = next(itr).split()
                 x = float(args[0])
                 y = float(args[1])
                 z = float(args[2])
                 width = float(args[3])
                 height = float(args[4])
                 depth = float(args[5])
+
+                polygons = []
                 add_box(polygons, x, y, z, width, height, depth)
-                modified = True
+                mmult(stack.peek(), polygons)
+                draw_lines(polygons, screen, pen)
+
             elif cmd == 'sphere':
-                args = next(itr).split()
                 x = float(args[0])
                 y = float(args[1])
                 z = 0
                 r = float(args[2])
                 step = int(round(2 * sqrt(r)))
+
+                polygons = []
                 add_sphere(polygons, x, y, z, r, step)
-                modified = True
+                mmult(stack.peek(), polygons)
+                draw_lines(polygons, screen, pen)
+
             elif cmd == 'torus':
-                args = next(itr).split()
                 x = float(args[0])
                 y = float(args[1])
                 z = 0
                 r = float(args[2])
                 R = float(args[3])
                 step = int(round(3 * sqrt(r)))
-                add_torus(polygons, x, y, z, r, R, step)
-                modified = True
 
-            # clear edge matrix
-            elif cmd == "clear":
-                edges = []
                 polygons = []
-                modified = True
+                add_torus(polygons, x, y, z, r, R, step)
+                mmult(stack.peek(), polygons)
+                draw_lines(polygons, screen, pen)
 
             # matrix control operations
-            elif cmd == "ident":
-                ident(T)
             elif cmd == "translate":
-                args = next(itr).split()
                 x = float(args[0])
                 y = float(args[1])
                 z = float(args[2])
                 u = make_translate(x, y, z)
-                matrix_mult(u, T)
+                stack.mult(u)
+
             elif cmd == "scale":
-                args = next(itr).split()
                 x = float(args[0])
                 y = float(args[1])
                 z = float(args[2])
                 u = make_scale(x, y, z)
-                matrix_mult(u, T)
-            elif cmd == "xrotate":
-                u = make_rotX(radians(float(next(itr, 0))))
-                matrix_mult(u, T)
-            elif cmd == "yrotate":
-                u = make_rotY(radians(float(next(itr, 0))))
-                matrix_mult(u, T)
-            elif cmd == "zrotate":
-                u = make_rotZ(radians(float(next(itr, 0))))
-                matrix_mult(u, T)
-            elif cmd == "apply":
-                matrix_mult(T, edges)
-                matrix_mult(T, polygons)
-                modified = True
+                stack.mult(u)
+
+            elif cmd == 'rotate':
+                if args[0] == 'x':
+                    u = make_rotX(radians(float(args[1])))
+                    stack.mult(u)
+                elif args[0] == 'y':
+                    u = make_rotY(radians(float(args[1])))
+                    stack.mult(u)
+                elif args[0] == 'z':
+                    u = make_rotY(radians(float(args[1])))
+                    stack.mult(u)
+                else:
+                    raise ValueError(args[0] + " is not a valid direction")
+
+            elif cmd == "push":
+                stack.push()
+
+            elif cmd == "pop":
+                stack.pop()
 
             # engine control operations
             elif cmd == "display":
-                if modified:
-                    print "Redraw"
-                    clear_screen(screen)
-                    draw_lines(edges, screen, pen2d)
-                    draw_polygons(polygons, screen, pen3d)
-                    modified = False
                 display(screen)
+
             elif cmd == "save":
-                if modified:
-                    print "Redraw"
-                    clear_screen(screen)
-                    draw_lines(edges, screen, pen2d)
-                    draw_polygons(polygons, screen, pen3d)
-                    modified = False
-                    # if the filename isn't specified, do nothing
-                fname = next(itr, None).strip()
+                fname = args[0]
                 if fname is not None:
                     if fname[-4:].lower() == ".ppm":
                         save_ppm(screen, fname)
                     else:
                         save_extension(screen, fname)
+
             elif cmd == "quit":
                 return
             
