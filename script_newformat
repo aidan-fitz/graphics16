@@ -1,0 +1,9 @@
+push
+    translate 250 250 0
+    box -100 -100 -100 200 200 200
+    push
+        translate 0 150 0
+	rotate y 30
+	box -50 -50 -50 100 100 100
+    pop
+pop

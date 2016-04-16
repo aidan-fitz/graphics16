@@ -1,10 +1,11 @@
 from matrix import matrix_mult as mmult
+from matrix import *
 
 class Stack:
     def __init__(self):
         self.stack = []
         I = new_matrix()
-        ident()
+        ident(I)
         self.stack.append(I)
 
     def push():
