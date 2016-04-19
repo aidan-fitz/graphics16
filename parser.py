@@ -10,17 +10,17 @@ from stack import Stack
 def parse_file( fname, screen, pen ):
     # transformation matrix stack
     stack = Stack()
-    
+
     # Iterating over the file so we can keep it open
     # Allows us to use stdin
     with open(fname) as fd:
         itr = iter(fd)
-        
+
         # Do not loop through the list because we need to get multiple elements
         while True:
-            args = next(itr, "quit").strip().lower().split()
-            cmd = args.pop(0)
-            
+            cmd = next(itr, "quit")
+            args = next(itr).strip().lower().split()
+
             # Skip comments and blank lines
             if cmd == '' or cmd[0] == '#':
                 continue
@@ -41,7 +41,7 @@ def parse_file( fname, screen, pen ):
                 add_edge(edges, x0, y0, z0, x1, y1, z1)
                 mmult(stack.peek(), edges)
                 draw_lines(edges, screen, pen)
-                
+
             elif cmd == "circle" or cmd == "c":
                 cx = float(args[0])
                 cy = float(args[1])
@@ -162,7 +162,7 @@ def parse_file( fname, screen, pen ):
 
             elif cmd == "quit":
                 return
-            
+
             # handle invalid commands
             else:
                 print 'Invalid command:', cmd
