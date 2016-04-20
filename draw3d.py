@@ -71,7 +71,7 @@ def add_sphere( points, cx, cy, cz, r, step ):
             x2, y2, z2 = columns[col1p][row1p]
             x3, y3, z3 = columns[col1p][row]
             add_quad(points, x0, y0, z0, x1, y1, z1, x2, y2, z2, x3, y3, z3)
-        
+
         # Bottom row
         else:
             x0, y0, z0 = columns[col][row]
@@ -196,18 +196,6 @@ def draw_triangle(matrix, index, screen, color):
     # Front faces
     if frontness > 0:
         draw_lines(edges, screen, color)
-
-'''
-# Uncomment for debugging purposes
-    # Faces perpendicular to view vector
-    elif frontness == 0:
-        draw_lines(edges, screen, [(v + 64) / 2 for v in color])
-
-    # Back faces
-    else:
-        draw_lines(edges, screen, [64]*3)
-'''
-
 
 def surface_normal(matrix, index):
     # Shorthand for the three vertices
