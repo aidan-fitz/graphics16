@@ -18,8 +18,7 @@ def parse_file( fname, screen, pen ):
 
         # Do not loop through the list because we need to get multiple elements
         while True:
-            cmd = next(itr, "quit")
-            args = next(itr).strip().lower().split()
+            cmd = next(itr, "quit").strip().lower()
 
             # Skip comments and blank lines
             if cmd == '' or cmd[0] == '#':
@@ -29,6 +28,7 @@ def parse_file( fname, screen, pen ):
 
             # 2-D drawing routines
             if cmd == "line":
+                args = next(itr).strip().lower().split()
                 x0 = float(args[0])
                 y0 = float(args[1])
                 z0 = float(args[2])
@@ -43,6 +43,7 @@ def parse_file( fname, screen, pen ):
                 draw_lines(edges, screen, pen)
 
             elif cmd == "circle" or cmd == "c":
+                args = next(itr).strip().lower().split()
                 cx = float(args[0])
                 cy = float(args[1])
                 cz = 0
@@ -56,6 +57,7 @@ def parse_file( fname, screen, pen ):
                 draw_lines(edges, screen, pen)
 
             elif cmd == "hermite" or cmd == "h":
+                args = next(itr).strip().lower().split()
                 x = [float(s) for s in args[:4]]
                 y = [float(s) for s in args[4:]]
 
@@ -66,6 +68,7 @@ def parse_file( fname, screen, pen ):
                 draw_lines(edges, screen, pen)
 
             elif cmd == "bezier" or cmd == "b":
+                args = next(itr).strip().lower().split()
                 x = [float(s) for s in args[:4]]
                 y = [float(s) for s in args[4:]]
 
@@ -77,6 +80,7 @@ def parse_file( fname, screen, pen ):
 
             # 3-D drawing routines
             elif cmd == "box":
+                args = next(itr).strip().lower().split()
                 x = float(args[0])
                 y = float(args[1])
                 z = float(args[2])
@@ -87,9 +91,10 @@ def parse_file( fname, screen, pen ):
                 polygons = []
                 add_box(polygons, x, y, z, width, height, depth)
                 mmult(stack.peek(), polygons)
-                draw_lines(polygons, screen, pen)
+                draw_polygons(polygons, screen, pen)
 
             elif cmd == 'sphere':
+                args = next(itr).strip().lower().split()
                 x = float(args[0])
                 y = float(args[1])
                 z = 0
@@ -99,9 +104,10 @@ def parse_file( fname, screen, pen ):
                 polygons = []
                 add_sphere(polygons, x, y, z, r, step)
                 mmult(stack.peek(), polygons)
-                draw_lines(polygons, screen, pen)
+                draw_polygons(polygons, screen, pen)
 
             elif cmd == 'torus':
+                args = next(itr).strip().lower().split()
                 x = float(args[0])
                 y = float(args[1])
                 z = 0
@@ -112,10 +118,11 @@ def parse_file( fname, screen, pen ):
                 polygons = []
                 add_torus(polygons, x, y, z, r, R, step)
                 mmult(stack.peek(), polygons)
-                draw_lines(polygons, screen, pen)
+                draw_polygons(polygons, screen, pen)
 
             # matrix control operations
             elif cmd == "translate":
+                args = next(itr).strip().lower().split()
                 x = float(args[0])
                 y = float(args[1])
                 z = float(args[2])
@@ -123,24 +130,27 @@ def parse_file( fname, screen, pen ):
                 stack.mult(u)
 
             elif cmd == "scale":
+                args = next(itr).strip().lower().split()
                 x = float(args[0])
                 y = float(args[1])
                 z = float(args[2])
                 u = make_scale(x, y, z)
                 stack.mult(u)
 
-            elif cmd == 'rotate':
-                if args[0] == 'x':
-                    u = make_rotX(radians(float(args[1])))
-                    stack.mult(u)
-                elif args[0] == 'y':
-                    u = make_rotY(radians(float(args[1])))
-                    stack.mult(u)
-                elif args[0] == 'z':
-                    u = make_rotY(radians(float(args[1])))
-                    stack.mult(u)
-                else:
-                    raise ValueError(args[0] + " is not a valid direction")
+            elif cmd == 'xrotate':
+                args = next(itr).strip().lower().split()
+                u = make_rotX(radians(float(args[0])))
+                stack.mult(u)
+
+            elif cmd == 'yrotate':
+                args = next(itr).strip().lower().split()
+                u = make_rotY(radians(float(args[0])))
+                stack.mult(u)
+
+            elif cmd == 'zrotate':
+                args = next(itr).strip().lower().split()
+                u = make_rotZ(radians(float(args[0])))
+                stack.mult(u)
 
             elif cmd == "push":
                 stack.push()
@@ -153,6 +163,7 @@ def parse_file( fname, screen, pen ):
                 display(screen)
 
             elif cmd == "save":
+                args = next(itr).strip().lower().split()
                 fname = args[0]
                 if fname is not None:
                     if fname[-4:].lower() == ".ppm":

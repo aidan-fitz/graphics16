@@ -8,19 +8,19 @@ class Stack:
         ident(I)
         self.stack.append(I)
 
-    def push():
+    def push(self):
         clone = [row[:] for row in self.peek()[:]]
         self.stack.append(clone)
 
-    def pop():
-        if len(stack) > 1:
+    def pop(self):
+        if len(self.stack) > 1:
             self.stack.pop()
 
-    def peek():
+    def peek(self):
         return self.stack[-1]
 
-    def mult(matrix):
+    def mult(self, matrix):
         mmult(matrix, self.peek())
 
-    def transform_points(points):
+    def transform_points(self, points):
         mmult(self.peek(), points)
