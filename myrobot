@@ -55,4 +55,8 @@ box
 0 0 20 60 100 40
 
 display
+
+save
+exploded-robot.png
+
 quit
