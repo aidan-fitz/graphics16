@@ -1,21 +1,11 @@
 #!/usr/bin/python
 
-from display import *
-from draw import *
-from draw3d import *
-from parser import *
-from matrix import *
-
+from interpreter import run
 import sys
 
-screen = new_screen()
-pen = [0, 255, 0]
-polygons = []
-
-fname = None
-if len(sys.argv) >= 2:
-    fname = sys.argv[1]
+if len(sys.argv) == 2:
+    run(sys.argv[1])
+elif len(sys.argv) == 1:
+    run(raw_input("please enter the filename of an mdl script file: \n"))
 else:
-    fname = '/dev/stdin'
-
-parse_file( fname, screen, pen )
+    print "Too many arguments."
