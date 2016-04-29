@@ -150,8 +150,15 @@ def rotate(args, env):
 # Display and save
 
 def display_img(args, env):
-    screen = env[2]
+    color, stack, screen, symbols = env
     display(screen)
 
 def save_img(args, env):
+    filename = args[1]
     color, stack, screen, symbols = env
+
+    if filename is not None:
+        if filename[-4:].lower() == ".ppm":
+            save_ppm(screen, filename)
+        else:
+            save_extension(screen, filename)
