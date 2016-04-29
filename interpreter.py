@@ -44,7 +44,10 @@ def run(filename):
         # Transformations
         "move": move,
         "scale": scale,
-        "rotate": rotate
+        "rotate": rotate,
+        # Display and save
+        "display": display_img,
+        "save": save_img
     }
 
     for command in commands:
@@ -86,7 +89,7 @@ def box(args, env):
     polygons = []
     add_box(polygons, x, y, z, width, height, depth)
     mmult(stack.peek(), polygons)
-    draw_polygons(polygons, screen, pen)
+    draw_polygons(polygons, screen, color)
 
 def sphere(args, env):
     x, y, z, r, coord_system = args[1:]
@@ -97,7 +100,7 @@ def sphere(args, env):
     polygons = []
     add_sphere(polygons, x, y, z, r, step)
     mmult(stack.peek() if coord_system is None else coord_system, polygons)
-    draw_polygons(polygons, screen, pen)
+    draw_polygons(polygons, screen, color)
 
 def torus(args, env):
     pass
@@ -143,3 +146,12 @@ def rotate(args, env):
 
     u = rot[axis](radians(degrees))
     stack.mult(u)
+
+# Display and save
+
+def display_img(args, env):
+    screen = env[2]
+    display(screen)
+
+def save_img(args, env):
+    color, stack, screen, symbols = env
