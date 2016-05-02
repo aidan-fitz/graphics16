@@ -20,7 +20,11 @@ class Stack:
         return self.stack[-1]
 
     def mult(self, matrix):
-        mmult(matrix, self.peek())
+        #mmult(matrix, self.peek())
+        # We be multiplying them backward
+        mmult(self.peek(), matrix)
+        self.stack[-1] = matrix
+
 
     def transform_points(self, points):
         mmult(self.peek(), points)

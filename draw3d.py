@@ -3,12 +3,13 @@ from draw import *
 class BoxVertices:
     def __init__(self, x, y, z, width, height, depth):
         self.i = 0
+        # (x, y, z) is the top left front corner (point 6)
         self.x0 = x
-        self.y0 = y
-        self.z0 = z
+        self.y0 = y - height
+        self.z0 = z - depth
         self.x1 = x + width
-        self.y1 = y + height
-        self.z1 = z + depth
+        self.y1 = y
+        self.z1 = z
 
     def __iter__(self):
         return self
