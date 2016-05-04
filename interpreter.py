@@ -93,8 +93,8 @@ def box(args, env):
 
 def sphere(args, env):
     x, y, z, r, coord_system = args[1:]
-    color, stack, screen, symbols = env
 
+    color, stack, screen, symbols = env
     step = int(round(2 * sqrt(r)))
 
     polygons = []
@@ -103,8 +103,15 @@ def sphere(args, env):
     draw_polygons(polygons, screen, color)
 
 def torus(args, env):
-    pass
-    #x, y, z, r, R, coord_system = args[1:]
+    x, y, z, r, R, coord_system = args[1:]
+    color, stack, screen, symbols = env
+    step = int(round(4 * sqrt(r)))
+
+    polygons = []
+    add_torus(polygons, x, y, z, r, R, step)
+    mmult(stack.peek() if coord_system is None else coord_system, polygons)
+    draw_polygons(polygons, screen, pen)
+
 
 # Matrix stack operations
 
