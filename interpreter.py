@@ -5,6 +5,7 @@ from matrix import matrix_mult as mmult
 from draw import *
 from draw3d import *
 from stack import Stack
+from animate import *
 
 from math import *
 
@@ -16,18 +17,34 @@ def run(filename):
 
     if p:
         commands, symbols = p
-        draw_frame(commands, symbols)
+        if is_animated(commands):
+            frames = num_frames(commands)
+            basename = get_basename(commands)
+
+            # Construct format string using format string
+            fmt_string = "%s-%%%dd.gif" % (basename, int(1 + max(log10(frames), 0)) )
+
+            screen = new_screen()
+            for i in range(frames):
+                draw_frame(commands, symbols, screen)
+                save_extension(screen, fmt_string % (i))
+        else:
+            draw_frame(commands, symbols)
     else:
         print "Parsing failed."
         return
 
 
 # Draw ONE frame
-def draw_frame(commands, symbols):
+def draw_frame(commands, symbols, screen = None):
     # Setup drawing environment *after* the error checking to prevent prematurely allocating too much memory
     color = [255, 255, 255]
     stack = Stack()
-    screen = new_screen()
+
+    if screen:
+        clear_screen(screen)
+    else:
+        screen = new_screen()
 
     env = (color, stack, screen, symbols)
 

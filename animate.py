@@ -19,7 +19,7 @@ def get_knob_specs(commands, frames):
     # Truncated `vary` commands
     vcmds = [cmd[1:] for cmd in commands if cmd[0] == 'vary']
     # Dict of arrays of knob values
-    knobs = {knob: [float(nan)] * frames for knob in [t[0] for t in vcmds]}
+    knobs = {knob: [float('nan')] * frames for knob in [t[0] for t in vcmds]}
     # Set the knob values
     for knob, frame0, frame1, value0, value1 in vcmds:
         if 0 <= frame0 < frame1 <= frames:
