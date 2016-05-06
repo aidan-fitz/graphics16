@@ -15,11 +15,15 @@ def run(filename):
     p = mdl.parseFile(filename)
 
     if p:
-        (commands, symbols) = p
+        commands, symbols = p
+        draw_frame(commands, symbols)
     else:
         print "Parsing failed."
         return
 
+
+# Draw ONE frame
+def draw_frame(commands, symbols):
     # Setup drawing environment *after* the error checking to prevent prematurely allocating too much memory
     color = [255, 255, 255]
     stack = Stack()
@@ -54,6 +58,8 @@ def run(filename):
         print command
         cmd = command[0]
         x_map[cmd](command, env)
+
+    return screen
 
 # Functions for executing commands
 
