@@ -19,10 +19,14 @@ def run(filename):
         commands, symbols = p
         if is_animated(commands):
             frames = num_frames(commands)
-            basename = get_basename(commands)
 
+            # Set knob values for each frame
+            symbols.update(get_knob_specs(commands, frames))
+            
+            basename = get_basename(commands)
             # Construct format string using format string
             fmt_string = "%s-%%%dd.gif" % (basename, int(1 + max(log10(frames), 0)) )
+            print fmt_string
 
             screen = new_screen()
             for i in range(frames):

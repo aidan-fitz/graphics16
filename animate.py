@@ -21,8 +21,14 @@ def get_knob_specs(commands, frames):
     # Dict of arrays of knob values
     knobs = {knob: [float('nan')] * frames for knob in [t[0] for t in vcmds]}
     # Set the knob values
-    for knob, frame0, frame1, value0, value1 in vcmds:
-        if 0 <= frame0 < frame1 <= frames:
-            pass
+    for knob, t0, t1, x0, x1 in vcmds:
+        # We allow t1 to be the length so that some animations involving rotations can be done smoothly
+        if 0 <= t0 < t1 <= frames:
+            x = knobs[knob]
+            for t in range(t0, min(t1 + 1, frames)):
+                # Derived from point-slope form
+                x[t] = x0 + (x1 - x0) * (t - t0) / (t1 - t0)
         else:
             raise ValueError('First and last frame numbers out of bounds: %d, %d.  Total number of frames: %d' % (frame0, frame1, frames))
+    # After looping
+    return knobs
