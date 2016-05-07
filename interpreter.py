@@ -21,8 +21,8 @@ def run(filename):
             frames = num_frames(commands)
 
             # Set knob values for each frame
-            symbols.update(get_knob_specs(commands, frames))
-            
+            symbols.update(make_knobs(commands, frames))
+
             basename = get_basename(commands)
             # Construct format string using format string
             fmt_string = "%s-%%%dd.gif" % (basename, int(1 + max(log10(frames), 0)) )

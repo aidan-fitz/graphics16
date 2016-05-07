@@ -15,7 +15,7 @@ def get_basename(commands):
     else:
         raise AttributeError('Please specify the filename prefix using the following command: basename <prefix>')
 
-def get_knob_specs(commands, frames):
+def make_knobs(commands, frames):
     # Truncated `vary` commands
     vcmds = [cmd[1:] for cmd in commands if cmd[0] == 'vary']
     # Dict of arrays of knob values
@@ -28,6 +28,8 @@ def get_knob_specs(commands, frames):
             for t in range(t0, min(t1 + 1, frames)):
                 # Derived from point-slope form
                 x[t] = x0 + (x1 - x0) * (t - t0) / (t1 - t0)
+        elif t0 >= t1:
+            raise ValueError('You inserted the first and last frame numbers backwards!')
         else:
             raise ValueError('First and last frame numbers out of bounds: %d, %d.  Total number of frames: %d' % (frame0, frame1, frames))
     # After looping
