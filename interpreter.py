@@ -137,7 +137,7 @@ def torus(args, env):
     polygons = []
     add_torus(polygons, x, y, z, r, R, step)
     mmult(stack.peek() if coord_system is None else coord_system, polygons)
-    draw_polygons(polygons, screen, pen)
+    draw_polygons(polygons, screen, color)
 
 
 # Matrix stack operations
