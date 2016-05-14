@@ -20,8 +20,10 @@ def run(filename):
         if is_animated(commands):
             frames = num_frames(commands)
 
+            print symbols
+
             # Set knob values for each frame
-            symbols.update(make_knobs(commands, frames))
+            knobs = make_knobs(commands, frames)
 
             basename = get_basename(commands)
             # Construct format string using format string
@@ -30,7 +32,7 @@ def run(filename):
 
             screen = new_screen()
             for i in range(frames):
-                draw_frame(commands, symbols, screen)
+                draw_frame(commands, symbols, screen, knobs, i)
                 save_extension(screen, fmt_string % (i))
         else:
             draw_frame(commands, symbols)
@@ -40,7 +42,7 @@ def run(filename):
 
 
 # Draw ONE frame
-def draw_frame(commands, symbols, screen = None):
+def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0):
     # Setup drawing environment *after* the error checking to prevent prematurely allocating too much memory
     color = [255, 255, 255]
     stack = Stack()
@@ -50,7 +52,7 @@ def draw_frame(commands, symbols, screen = None):
     else:
         screen = new_screen()
 
-    env = (color, stack, screen, symbols)
+    env = (color, stack, screen, symbols, knobs, frame)
 
     # Pick a function to execute from the dict(string, function)
     x_map = {
@@ -78,7 +80,8 @@ def draw_frame(commands, symbols, screen = None):
     for command in commands:
         print command
         cmd = command[0]
-        x_map[cmd](command, env)
+        if cmd in x_map:
+            x_map[cmd](command, env)
 
     return screen
 
@@ -89,7 +92,7 @@ def draw_frame(commands, symbols, screen = None):
 def line(args, env):
     # Semantic analyzer
     x0, y0, z0, x1, y1, z1 = args[1:]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
     # Immediately draw line to screen
     edges = []
@@ -111,7 +114,7 @@ def bezier(args, env):
 
 def box(args, env):
     x, y, z, width, height, depth = args[1:]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
     polygons = []
     add_box(polygons, x, y, z, width, height, depth)
@@ -121,7 +124,7 @@ def box(args, env):
 def sphere(args, env):
     x, y, z, r, coord_system = args[1:]
 
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
     step = int(round(2 * sqrt(r)))
 
     polygons = []
@@ -131,7 +134,7 @@ def sphere(args, env):
 
 def torus(args, env):
     x, y, z, r, R, coord_system = args[1:]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
     step = int(round(4 * sqrt(r)))
 
     polygons = []
@@ -143,12 +146,12 @@ def torus(args, env):
 # Matrix stack operations
 
 def push(args, env):
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
     stack.push()
 
 def pop(args, env):
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
     stack.pop()
 
@@ -156,21 +159,25 @@ def pop(args, env):
 
 def move(args, env):
     x, y, z, knob = args[1:]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
-    u = make_translate(x, y, z)
+    c = knobs[knob][frame] if knobs and knob else 1
+
+    u = make_translate(x*c, y*c, z*c)
     stack.mult(u)
 
 def scale(args, env):
     x, y, z, knob = args[1:]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
-    u = make_scale(x, y, z)
+    c = knobs[knob][frame] if knobs and knob else 1
+
+    u = make_scale(x*c, y*c, z*c)
     stack.mult(u)
 
 def rotate(args, env):
     axis, degrees, knob = args[1:]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
     rot = {
         "x": make_rotX,
@@ -178,7 +185,9 @@ def rotate(args, env):
         "z": make_rotZ
     }
 
-    u = rot[axis](radians(degrees))
+    c = knobs[knob][frame] if knobs and knob else 1
+
+    u = rot[axis](radians(degrees)*c)
     stack.mult(u)
 
 # Display and save

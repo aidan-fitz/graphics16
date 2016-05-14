@@ -1,6 +1,7 @@
 *~
 main
 *.png
+*.gif
 *.ppm
 
 # Object files
