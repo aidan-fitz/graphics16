@@ -7,6 +7,8 @@ from draw3d import *
 from stack import Stack
 from animate import *
 
+from json import dumps as jsonfmt
+
 from math import *
 
 def run(filename):
@@ -20,20 +22,39 @@ def run(filename):
         if is_animated(commands):
             frames = num_frames(commands)
 
-            print symbols
+            #print symbols
 
             # Set knob values for each frame
             knobs = make_knobs(commands, frames)
 
+            #print jsonfmt(knobs, sort_keys=True, indent=4)
+
             basename = get_basename(commands)
             # Construct format string using format string
             fmt_string = "%s-%%0%dd.gif" % (basename, int(1 + max(log10(frames), 0)) )
-            print fmt_string
+            #print fmt_string
 
             screen = new_screen()
             for i in range(frames):
+                print "Drawing frame %d of %d ..." % (i, frames - 1)
                 draw_frame(commands, symbols, screen, knobs, i)
                 save_extension(screen, fmt_string % (i))
+
+            print '''
+
+
+Done making your animation.
+
+To show it, run the following ImageMagick terminal commands:
+
+$ convert %s-*.gif %s.gif && animate -loop 0 %s.gif
+
+                        - or -
+
+$ animate -loop 0 %s-*.gif
+
+Have a nice day!
+            ''' % (basename, basename, basename, basename)
         else:
             draw_frame(commands, symbols)
     else:
@@ -42,7 +63,7 @@ def run(filename):
 
 
 # Draw ONE frame
-def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0):
+def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0, verbose = False):
     # Setup drawing environment *after* the error checking to prevent prematurely allocating too much memory
     color = [255, 255, 255]
     stack = Stack()
@@ -78,7 +99,8 @@ def draw_frame(commands, symbols, screen = None, knobs = None, frame = 0):
     }
 
     for command in commands:
-        print command
+        if verbose:
+            print command
         cmd = command[0]
         if cmd in x_map:
             x_map[cmd](command, env)
@@ -193,12 +215,12 @@ def rotate(args, env):
 # Display and save
 
 def display_img(args, env):
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
     display(screen)
 
 def save_img(args, env):
     filename = args[1]
-    color, stack, screen, symbols = env
+    color, stack, screen, symbols, knobs, frame = env
 
     if filename is not None:
         if filename[-4:].lower() == ".ppm":

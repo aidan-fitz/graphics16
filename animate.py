@@ -27,7 +27,7 @@ def make_knobs(commands, frames):
             x = knobs[knob]
             for t in range(t0, min(t1 + 1, frames)):
                 # Derived from point-slope form
-                x[t] = x0 + (x1 - x0) * (t - t0) / (t1 - t0)
+                x[t] = x0 + (float(x1) - x0) * (t - t0) / (t1 - t0)
         elif t0 >= t1:
             raise ValueError('You inserted the first and last frame numbers backwards!')
         else:
