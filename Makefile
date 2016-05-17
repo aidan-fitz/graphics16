@@ -1,6 +1,6 @@
 # Cleans out the bytecode files
 squeaky-clean: clean
-	rm -f *.pyc *.png
+	rm -f *.pyc *.png *.gif
 
 # Cleans out the folder but keeps the .pyc bytecode files
 # This makes it faster the next time you run
