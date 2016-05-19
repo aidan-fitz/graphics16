@@ -179,7 +179,7 @@ def draw_polygons(matrix, screen, color):
     for p in range(0, len(matrix), 3):
         draw_triangle(matrix, p, screen, color)
 
-def draw_triangle(matrix, index, screen, color):
+def draw_triangle(matrix, index, screen, color, fill=False):
     # Shorthand for the three vertices
     p0 = matrix[index]
     p1 = matrix[index + 1]
@@ -197,6 +197,25 @@ def draw_triangle(matrix, index, screen, color):
     # Front faces
     if frontness > 0:
         draw_lines(edges, screen, color)
+        # Fill the triangle
+        if fill:
+            # sort vertices by y-coordinate so we can scanline bottom to top
+            vertices = sorted([p0, p1, p2], key = lambda p: p[1])
+            bottom = vertices[0]
+            middle = vertices[1]
+            top    = vertices[2]
+            # calculate dx's
+            x0 = x1 = bottom[0]
+            dx = lambda p0, p1: float(p0[0] - p1[0]) / (p0[1] - p1[1])
+            dx0       = dx(bottom, top)
+            dx1_lower = dx(bottom, middle)
+            dx1_upper = dx(middle, top)
+            # draw horizontal line segments
+            for y in range(int(bottom[1]), int(top[1])):
+                y0 = y1 = y
+                draw_line(screen, x0, y0, x1, y1, color)
+                x0 += dx0
+                x1 += dx1_lower if y <= middle[1] else dx1_upper
 
 def surface_normal(matrix, index):
     # Shorthand for the three vertices
@@ -209,7 +228,9 @@ def surface_normal(matrix, index):
     b = [p2[i] - p0[i] for i in range(3)]
 
     # Area of triangle is half the cross product
-    return [c / 2 for c in cross_product(a, b)]
+    #return [c / 2 for c in cross_product(a, b)]
+    # But to keep it simple, we'll return the cross product
+    return cross_product(a, b)
 
 def cross_product(a, b):
     if len(a) == len(b) == 3:
