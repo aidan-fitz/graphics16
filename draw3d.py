@@ -1,4 +1,5 @@
 from draw import *
+from math import ceil
 
 class BoxVertices:
     def __init__(self, x, y, z, width, height, depth):
@@ -177,7 +178,7 @@ def draw_polygons(matrix, screen, color):
         raise ValueError("Need 3 points to draw a triangle")
 
     for p in range(0, len(matrix), 3):
-        draw_triangle(matrix, p, screen, color)
+        draw_triangle(matrix, p, screen, color, fill=True)
 
 def draw_triangle(matrix, index, screen, color, fill=False):
     # Shorthand for the three vertices
@@ -206,14 +207,17 @@ def draw_triangle(matrix, index, screen, color, fill=False):
             top    = vertices[2]
             # calculate dx's
             x0 = x1 = bottom[0]
-            dx = lambda p0, p1: float(p0[0] - p1[0]) / (p0[1] - p1[1])
+            dx = lambda p0, p1: float(p0[0] - p1[0]) / (p0[1] - p1[1]) if p0[1] != p1[1] else 0
             dx0       = dx(bottom, top)
             dx1_lower = dx(bottom, middle)
             dx1_upper = dx(middle, top)
+
+            fill_color = [e/2 for e in color]
+
             # draw horizontal line segments
-            for y in range(int(bottom[1]), int(top[1])):
+            for y in range(int(bottom[1]), int(ceil(top[1]))):
                 y0 = y1 = y
-                draw_line(screen, x0, y0, x1, y1, color)
+                draw_line(screen, x0, y0, x1, y1, fill_color)
                 x0 += dx0
                 x1 += dx1_lower if y <= middle[1] else dx1_upper
 
